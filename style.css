@@ -1,0 +1,185 @@
+/* El id va con #, el class con .*/
+
+@font-face {
+    font-family: Aldhabi;
+    src: url(aldhabi2.ttf);
+}
+
+body {
+    background-color: hsl(34, 78%, 90%);
+}
+
+
+h1 {
+    font-weight: bold;
+    font-family: "Sans-Serif";
+    color: rgb(115, 83, 78);
+}
+
+a {
+    text-decoration: none;
+}
+
+.top-page {
+    background-color: hsl(28, 70%, 80%);
+
+}
+
+#footer-container {
+    background-color: hsl(28, 70%, 80%);
+    margin-top: 2em;
+    display: flex;
+    flex-direction: row;
+    
+}
+
+#footer-content {
+   
+    margin-left: 100px;
+}
+
+#header-title {
+    display: inline-block;
+    margin-right: 50%;
+    margin-bottom: 1em;
+}
+
+.navbar {
+    margin-bottom: 2em;
+}
+
+.navbar-nav {
+
+    padding-left: 1.8em;
+    padding-right: 1.8em;
+    font-family: "Comic Sans";
+}
+
+.nav-item {
+    font-size: 1.8vw;
+}
+
+.navbar-nav:hover {
+    background-color: hsl(28, 60%, 65%);
+    font-weight: bold;
+}
+
+
+#most-req-dest-title {
+    margin-left: 9.5%;
+    text-align: start;
+    margin-bottom: 1em;
+    font-size: 2.5vw;
+}
+
+#most-req-dest-carousel {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3em;
+}
+
+.carr-card-title {
+    display: flex;
+    position: absolute;
+    transform: translate(-50%, -60%);
+    left: 50%;
+    top: 15%;
+    font-size: 8vw;
+    font-weight: bold;
+    white-space: nowrap;
+    font-family: "Comic Sans MS";
+}
+
+.card-title {
+    text-align: center;
+    font-size: 30px;
+    font-family: Aldhabi;
+}
+
+#carr-Alb {
+
+    color: rgb(140, 71, 41);
+}
+
+#carr-Mil {
+
+    color: rgb(23, 92, 93);
+}
+
+#carr-Pra {
+
+    color: rgb(123, 58, 141);
+}
+
+#carr-Rio {
+
+    color: rgb(76, 166, 202);
+}
+
+#destinies-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-flow: wrap;
+}
+
+.card {
+    margin-bottom: 1.5em;
+    background-color: hsl(34, 68%, 85%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.destiny-img {
+    margin-bottom: 1em;
+}
+
+.concrete-dest-container {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 3em;
+}
+
+.concrete-dest-image {
+    margin-left: 5%;
+    max-width: 45%;
+
+}
+
+.concrete-dest-title {
+    font-size: 4vw;
+    text-align: center;
+    margin-bottom: 0.5em;
+    color: rgb(158, 135, 78);
+}
+
+.concrete-dest-text {
+    margin-left: 2em;
+    font-size: 1.7vw;
+    text-align: justify;
+    margin-right: 1em;
+}
+
+.concrete-dest-res-button {
+    font-size: 3vw;
+    margin-bottom: 0.5em;
+    padding: 0.5vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    border: solid 5px;
+    color: rgb(223, 134, 90);
+    background-color: rgb(245, 232, 199);
+}
+
+.concrete-dest-res-button:hover {
+    position: relative;
+    font-weight: bold;
+    font-size: 3.3vw;
+}
+
+.concrete-dest-res-container {
+    display: block;
+    text-align: center;
+    margin-bottom: 3em;
+}
