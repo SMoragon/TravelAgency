@@ -40,22 +40,30 @@ a {
     margin-bottom: 1em;
 }
 
+#header-title > img{
+    max-width: 60%;
+    min-width: 30%;
+}
+
 .navbar {
     margin-bottom: 2em;
 }
 
 .navbar-nav {
+    flex-direction: row;
+    justify-content: space-evenly;
+    
+}
 
+.nav-item {
+    font-size: calc(1em + 0.8vw);
     padding-left: 1.8em;
     padding-right: 1.8em;
     font-family: "Comic Sans";
 }
 
-.nav-item {
-    font-size: 1.8vw;
-}
 
-.navbar-nav:hover {
+.nav-item:hover {
     background-color: hsl(28, 60%, 65%);
     font-weight: bold;
 }
@@ -85,6 +93,11 @@ a {
     font-weight: bold;
     white-space: nowrap;
     font-family: "Comic Sans MS";
+}
+
+.destiny-card{
+    border: solid 0.15rem;
+    border-color: hsl(34, 68%, 45%);
 }
 
 .card-title {
@@ -190,6 +203,5 @@ a {
 }
 
 .footer-img {
-    max-height: 80%;
     margin-top: -1.5em;
 }
