@@ -49,25 +49,35 @@ a {
     margin-bottom: 2em;
 }
 
-.navbar-nav {
-    flex-direction: row;
-    justify-content: space-evenly;
-    
-}
-
 .nav-item {
-    font-size: calc(1em + 0.8vw);
-    padding-left: 1.8em;
-    padding-right: 1.8em;
+    font-size: calc(0.8em + 1.3vw);
+    padding-left: calc(1em + 0.58vw);
+    padding-right: calc(1em + 0.5vw);
     font-family: "Comic Sans";
 }
+
+@media (min-width:768px) {
+    #navbar-list{
+        margin-left: auto;
+        margin-right: auto;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+}
+
+.navbar-nav {
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+}
+
+
 
 
 .nav-item:hover {
     background-color: hsl(28, 60%, 65%);
     font-weight: bold;
 }
-
 
 #most-req-dest-title {
     margin-left: 9.5%;
