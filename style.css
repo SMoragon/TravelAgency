@@ -221,3 +221,15 @@ a {
    word-wrap: break-word;
     
 }
+
+.modal-destiny-container{
+    background-color: transparent;
+}
+
+.modal-destiny-button{
+    float:right;
+}
+
+.modal-destiny-image{
+max-height: 95%;
+}
