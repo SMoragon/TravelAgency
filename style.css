@@ -40,7 +40,7 @@ a {
     margin-bottom: 1em;
 }
 
-#header-title > img{
+#header-title>img {
     max-width: 60%;
     min-width: 30%;
 }
@@ -56,23 +56,11 @@ a {
     font-family: "Comic Sans";
 }
 
-@media (min-width:768px) {
-    #navbar-list{
-        margin-left: auto;
-        margin-right: auto;
-        flex-direction: row;
-        justify-content: space-evenly;
-    }
-}
-
 .navbar-nav {
     flex-direction: column;
     justify-content: space-evenly;
     text-align: center;
 }
-
-
-
 
 .nav-item:hover {
     background-color: hsl(28, 60%, 65%);
@@ -105,7 +93,7 @@ a {
     font-family: "Comic Sans MS";
 }
 
-.destiny-card{
+.destiny-card {
     border: solid 0.15rem;
     border-color: hsl(34, 68%, 45%);
 }
@@ -154,31 +142,15 @@ a {
     margin-bottom: 1em;
 }
 
-.concrete-dest-container {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 3em;
-}
 
-.concrete-dest-image {
-    margin-left: 5%;
-    max-width: 45%;
-
-}
 
 .concrete-dest-title {
-    font-size: 4vw;
+
     text-align: center;
     margin-bottom: 0.5em;
     color: rgb(158, 135, 78);
 }
 
-.concrete-dest-text {
-    margin-left: 2em;
-    font-size: 1.7vw;
-    text-align: justify;
-    margin-right: 1em;
-}
 
 .concrete-dest-res-button {
     font-size: 3vw;
@@ -186,9 +158,13 @@ a {
     padding: 0.5vw;
     padding-left: 2vw;
     padding-right: 2vw;
-    border: solid 5px;
-    color: rgb(223, 134, 90);
-    background-color: rgb(245, 232, 199);
+
+    
+   
+}
+
+.concrete-dest-image {
+    margin-left: 5%;
 }
 
 .concrete-dest-res-button:hover {
@@ -201,6 +177,9 @@ a {
     display: block;
     text-align: center;
     margin-bottom: 3em;
+    border: solid 5px;
+    color: rgb(223, 134, 90);
+    background-color: rgb(245, 232, 199);
 }
 
 #footer-ul {
@@ -217,19 +196,61 @@ a {
     max-width: 100%;
 }
 
-#footer-mail{
-   word-wrap: break-word;
-    
+#footer-mail {
+    word-wrap: break-word;
+
 }
 
-.modal-destiny-container{
+.modal-destiny-container {
     background-color: transparent;
 }
 
-.modal-destiny-button{
-    float:right;
+.modal-destiny-button {
+    float: right;
 }
 
-.modal-destiny-image{
-max-height: 95%;
+.modal-destiny-image {
+    max-height: 95%;
+}
+
+
+@media (min-width:768px) {
+    #navbar-list {
+        margin-left: auto;
+        margin-right: auto;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .concrete-dest-text {
+        margin-left: 2em;
+        font-size: 1.7vw;
+        text-align: justify;
+        margin-right: 5%;
+    }
+
+    .concrete-dest-title {
+        font-size: 4vw;
+
+    }
+}
+
+
+@media (max-width:767.9px) {
+    .concrete-dest-text {
+        margin-top: 1.5em;
+        text-align: left;
+    }
+
+    .concrete-dest-image {
+        max-width: 90%;
+    }
+
+    .concrete-dest-title {
+        font-size: calc(1em + 2vw)
+    }
+
+    .concrete-dest-res-button {
+        font-size: calc(1em + 2vw);
+    }
 }
