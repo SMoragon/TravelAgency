@@ -78,10 +78,68 @@
       </div>
       <div class="row">
         <div class="concrete-dest-res-container offset-md-4 col-md-4 offset-sm-3 col-sm-6 offset-2 col-8">
-          <a href="#" class="concrete-dest-res-button">
-            RESERVAR VUELO
+          <a data-bs-toggle="modal" data-bs-target="#concrete-dest-res-form" href="" class="concrete-dest-res-button">
+            <div id="concrete-dest-res-text">RESERVAR VUELO</div>
           </a>
         </div>
+
+        <div class="modal modal-lg offset-3 w-50 fade" id="concrete-dest-res-form">
+
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" id="concrete-dest-res-modal-container">
+              <div class="modal-header">
+                <h5 class="modal-title">RESERVAR VUELO</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="container-fluid">
+                  <form action="" method="POST">
+                    <div class="form-group row">
+                      <label for="client-full-name" class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
+                        Nombre y Apellidos: </label>
+                      <div class="col-6">
+                        <input type="text" class="form-control form-control-sm concrete-dest-res-form-input"
+                          id="client-full-name">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="client-email" class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
+                        Correo electrónico: </label>
+                      <div class="col-6">
+                        <input type="email" class="form-control form-control-sm concrete-dest-res-form-input"
+                          id="client-email">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="client-res-from-date"
+                        class="offset-1 col-4 col-form-label concrete-dest-res-form-field"> Fecha de ida: </label>
+                      <div class="col-5">
+                        <input type="date" class="form-control form-control-sm concrete-dest-res-form-input"
+                          id="client-res-from-date">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="client-res-to-date"
+                        class="offset-1 col-4 col-form-label concrete-dest-res-form-field"> Fecha de vuelta: </label>
+                      <div class="col-5">
+                        <input type="date" class="form-control form-control-sm concrete-dest-res-form-input"
+                          id="client-res-to-date">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" onclick="validate()"
+                  class="concrete-dest-res-form-but">ENVIAR</button>
+                <button type="button" data-bs-dismiss="modal" class="concrete-dest-res-form-but">CERRAR</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form action=""></form>
+
       </div>
 
     </div>
