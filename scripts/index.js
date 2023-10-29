@@ -1,6 +1,8 @@
 "use strict";
+
 const mysql = require("mysql");
 const dao = require("./dao.js");
+const utils=require("./utils.js")
 
 const pool = mysql.createPool({
   host: "localhost",
@@ -10,10 +12,14 @@ const pool = mysql.createPool({
 });
 
 let dDeDao = new dao(pool);
-let usuario = ["Pueblo de Ana Mena", "Maravilloso pueblo para pasar el verano junto con los familiares de Ana Mena", "(～﹃～)~zZ， (✿◡‿◡)， (￣、￣)", 21.3];
-dDeDao.insertarDestino(usuario,cb_insertarDestino)
+let usuario = ["Pueblo Sergio", "Maravilloso pueblo para pasar el verano junto con Sergio", "(～﹃～)~zZ， (✿◡‿◡)， (￣、￣)", 21.3];
+let str = "30/11/2023"
 
-function cb_insertarDestino(err, resultado) {
+let date = utilsparseStrToDate(str)
+let dato = [2, "Ana", "sergio@gmail.com", date];
+dDeDao.reservaDestino(dato,cb_insertar)
+
+function cb_insertar(err, resultado) {
   if (err) {
     console.log("ERROR AL INSERTAR DESTINO");
   } else {
