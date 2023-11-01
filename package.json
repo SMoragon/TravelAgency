@@ -12,6 +12,10 @@
   "author": "ZhiPeng Gao, Sergio Moragón Jiménez (G06)",
   "license": "MIT",
   "dependencies": {
-    "mysql": "^2.18.1"
+    "express": "4.18.2",
+    "mysql": "2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "3.0.1"
   }
 }

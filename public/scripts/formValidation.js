@@ -1,6 +1,6 @@
 "use strict";
 
-import * as utils from "./utils";
+//import * as utils from "./utils";
 
 function validate() {
   var client_full_name = document.querySelector("#client-full-name");
@@ -15,18 +15,25 @@ function validate() {
     date_to
   );
 
+  closePopups();
+
   if (any_empty) {
-    alert("Todos los campos deben estar rellenos.");
+    var empty_error=document.querySelector("#empty-error")
+    console.log(empty_error)
+    empty_error.style.display="contents";
   } 
   else {
     var email_ok = validateEmail(client_email);
-    var dates_ok = validateDates(date_from, date_to);
+    var dates_ok =false;
+   // var dates_ok = validateDates(date_from, date_to);
 
     if (!email_ok) {
-      alert('El email introducido no es correcto. El formato debe ser "abcde@fghi.jkl".');
+      var mail_error=document.querySelector("#mail-error")
+      mail_error.style.display="contents";
     } 
     else if (!dates_ok) {
-      alert("La fecha actual debe ser anterior o la misma que la de ida; y la fecha de ida debe ser anterior o la misma que la de vuelta.");
+      var date_error=document.querySelector("#date-error")
+      date_error.style.display="contents";
     }
   }
 }
@@ -43,4 +50,13 @@ function validateDates(date_from, date_to) {
 function validateEmail(client_email) {
   var email_regex = new RegExp(/\w+@\w+\.\w+/);
   return client_email.value.toLocaleLowerCase().match(email_regex) !== null;
+}
+
+function closePopups(){
+  var popups=document.querySelectorAll(".popup-form-error")
+  console.log(popups)
+  popups.forEach((popup)=>{
+    console.log(popup)
+    popup.style.display="none";
+  })
 }
