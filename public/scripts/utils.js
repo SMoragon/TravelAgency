@@ -5,6 +5,11 @@ function getCurDate() {
     date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     return date;
   }
+
+  function parseDateToStr(date) {
+    date = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    return date;
+  }
   
   function parseStrToDate(str){
     var date = str.split("/");
@@ -12,4 +17,4 @@ function getCurDate() {
     return date
   }
 
-export {getCurDate, parseStrToDate}
+export {getCurDate,parseDateToStr, parseStrToDate}

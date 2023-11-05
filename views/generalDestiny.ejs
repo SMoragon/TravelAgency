@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+  <!-- Bootstrap, stylesheets, WP title and favicon load. -->
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,8 @@
   </head>
 
   <body>
+
+    <!-- Use of ejs to avoid copy-pasting the whole header -->
     <header>
       <%- include ('pieces/header')%>
     </header>
@@ -27,15 +30,20 @@
 
       <div class="container-fluid">
 
+        <!-- Destiny name (title of the main content in the WP) gotm by params in the render(template) call. -->
+
         <p class="concrete-dest-title"><%= datos.nombre.toUpperCase() %></p>
 
         <div class="row mb-5">
 
+          <!-- Image got by the render call, codified from BLOB (DB storage format) to base-64 (human-visible) -->
+
           <img class="concrete-dest-image ml-5 col-md-5 col-sm-12 col-12"
-            src="<%= datos.imagen %>"
+            src="data:image/png;base64,<%=datos.imagen.toString('base64')%>"
             alt= <%=datos.descripcion %>
           >
 
+          <!-- Destiny content (a description of the offer, for instance). -->
           <p class="concrete-dest-text col-md-5 offset-1 col-sm-10 col-10">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
             voluptate magni dolores nulla. Reiciendis, ex tempora explicabo,
@@ -50,7 +58,9 @@
 
           </p>
 
+          <!-- Book flight button, that will toggle a modal where the form will be displayed. -->
         </div>
+
         <div class="row">
           <div
             class="concrete-dest-res-container offset-md-4 col-md-4 offset-sm-3 col-sm-6 offset-2 col-8">
@@ -60,27 +70,38 @@
             </a>
           </div>
 
+          <!-- Modal with the information of the flight booked. -->
           <div class="modal modal-lg fade" id="concrete-dest-res-form"
             data-bs-backdrop="static">
 
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content" id="concrete-dest-res-modal-container">
                 <div class="modal-header">
+
+                  <!-- Price got by params and button to dismiss the modal as the header of it.
+                       If there were any popup active, it will be closed before displaying it to the user. -->
                   <h5 class="modal-title">¡POR TAN SOLO <%= datos.precio %>€!</h5>
                   <button type="button" class="btn-close"
                     data-bs-dismiss="modal" onclick="closePopups()"></button>
+
                 </div>
+
                 <div class="modal-body">
                   <div class="container-fluid">
-                    <form action method="POST">
+
+                    <!--  -->
+                    <form method="POST" action="/procesar_formulario">
+
                       <div class="form-group row">
                         <label for="client-full-name"
                           class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
                           Nombre y Apellidos: </label>
+                          <input type="text"
+                            name="site-name" id="site-name" style="display:none;" value="<%= datos.nombre %>">
                         <div class="col-6">
                           <input type="text"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            id="client-full-name">
+                            name="client-full-name" id="client-full-name">
                         </div>
                       </div>
                       <div class="form-group row">
@@ -90,7 +111,7 @@
                         <div class="col-6">
                           <input type="email"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            id="client-email">
+                            name="client-email" id="client-email">
                           <span class="popup-form-error" id="mail-error">El
                             email introducido no es correcto. El formato debe
                             ser "abcde@fghi.jkl".</span>
@@ -103,6 +124,7 @@
                         <div class="col-5">
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
+                            name="client-res-from-date"
                             id="client-res-from-date">
                         </div>
                       </div>
@@ -113,7 +135,7 @@
                         <div class="col-5">
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            id="client-res-to-date">
+                            name="client-res-to-date" id="client-res-to-date">
                           <span class="popup-form-error" id="date-error">La
                             fecha actual debe ser anterior o la misma que la de
                             ida; y la
@@ -123,20 +145,19 @@
                             los campos deben estar rellenos.</span>
                         </div>
                       </div>
-                    </form>
+                    
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" onclick="validate()"
-                    class="concrete-dest-res-form-but">ENVIAR</button>
+                  <input type="submit" value="ENVIAR"
+                    class="concrete-dest-res-form-but"></input>
                   <button type="button" onclick="closePopups()"
                     data-bs-dismiss="modal" class="concrete-dest-res-form-but">CERRAR</button>
-                </div>
+                </form>
+              </div>
               </div>
             </div>
           </div>
-
-          <form action></form>
 
         </div>
 
