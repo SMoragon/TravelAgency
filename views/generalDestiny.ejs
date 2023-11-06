@@ -71,18 +71,17 @@
           </div>
 
           <!-- Modal with the information of the flight booked. -->
-          <div class="modal modal-lg fade" id="concrete-dest-res-form"
+          <div class="modal modal-lg fade in" id="concrete-dest-res-form"
             data-bs-backdrop="static">
 
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content" id="concrete-dest-res-modal-container">
                 <div class="modal-header">
 
-                  <!-- Price got by params and button to dismiss the modal as the header of it.
-                       If there were any popup active, it will be closed before displaying it to the user. -->
+                  <!-- Price got by params and button to dismiss the modal as the header of it. -->
                   <h5 class="modal-title">¡POR TAN SOLO <%= datos.precio %>€!</h5>
                   <button type="button" class="btn-close"
-                    data-bs-dismiss="modal" onclick="closePopups()"></button>
+                    data-bs-dismiss="modal"></button>
 
                 </div>
 
@@ -99,22 +98,33 @@
                           <input type="text"
                             name="site-name" id="site-name" style="display:none;" value="<%= datos.nombre %>">
                         <div class="col-6">
+
                           <input type="text"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            name="client-full-name" id="client-full-name">
+                            name="client-full-name" id="client-full-name"
+                            <% if (typeof errores != "undefined" && errores["client-full-name"]) { %>
+                            value="<%= oldValues.client-full-name.value %>"
+                            <% } %>
+                            >
+                            <% if (locals.errores && errores["client-full-name"]) { %>
+                              <span class="text-danger"><%= errores.client-full-name.msg %></span>
+                              <% } %>
+
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="client-email"
                           class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
-                          Correo electrónico: </label>
+                          Correo electrónico: </label>   
                         <div class="col-6">
                           <input type="email"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-email" id="client-email">
-                          <span class="popup-form-error" id="mail-error">El
-                            email introducido no es correcto. El formato debe
-                            ser "abcde@fghi.jkl".</span>
+
+                            <% if (locals.errores && errores["client-email"]) { %>
+                              <span class="text-danger"><%= errores.client-email.msg %></span>
+                              <% } %>
+
                         </div>
                       </div>
                       <div class="form-group row">
@@ -122,10 +132,15 @@
                           class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
                           Fecha de ida: </label>
                         <div class="col-5">
+
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-res-from-date"
                             id="client-res-from-date">
+
+                              <% if (locals.errores && errores["client-res-from-date"]) { %>
+                              <span class="text-danger"><%= errores.client-res-from-date.msg %></span>
+                              <% } %>
                         </div>
                       </div>
                       <div class="form-group row">
@@ -136,13 +151,11 @@
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-res-to-date" id="client-res-to-date">
-                          <span class="popup-form-error" id="date-error">La
-                            fecha actual debe ser anterior o la misma que la de
-                            ida; y la
-                            fecha de ida debe ser anterior o la misma que la de
-                            vuelta.</span>
-                          <span class="popup-form-error" id="empty-error">Todos
-                            los campos deben estar rellenos.</span>
+                       
+                            <% if (locals.errores && errores["client-res-to-date"]) { %>
+                              <span class="text-danger"><%= errores.client-res-to-date.msg %></span>
+                              <% } %>
+
                         </div>
                       </div>
                     
@@ -151,7 +164,7 @@
                 <div class="modal-footer">
                   <input type="submit" value="ENVIAR"
                     class="concrete-dest-res-form-but"></input>
-                  <button type="button" onclick="closePopups()"
+                  <button type="button"
                     data-bs-dismiss="modal" class="concrete-dest-res-form-but">CERRAR</button>
                 </form>
               </div>
@@ -164,10 +177,25 @@
       </div>
 
     </main>
+
+   
+
     <footer>
       <%- include ('pieces/footer')%>
     </footer>
     <script src="/scripts/formValidation.js"></script>
   </body>
 
+
+  
+    <% if (showModal) { %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = new bootstrap.Modal(document.getElementById('concrete-dest-res-form'));
+            modal.show();
+        });
+      </script>  
+    <% } %>
+
+</script>
 </html>

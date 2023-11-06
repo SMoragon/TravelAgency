@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="/styles/style.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+    <title>Viajes La Ciénaga - Nosotros</title>
+    <link rel="icon" type="image/jpg" href="Images/favicon-shrek.jpg" />
+  </head>
+
+  <body>
+    <header><%- include ('pieces/header')%></header>
+
+    <main id="main">
+      <div class="container-fluid">
+        <h1>
+          Felicidades has reservado correctamente tu viaje a <%= nombre.toUpperCase() %> !!!
+        </h1>
+        <blockquote>
+          Disfrute de tus viajes, Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Similique nisi sit iure deleniti ea ut illo
+          voluptatem illum a rerum porro velit provident fugiat laborum possimus
+          cum, distinctio et? Corporis.
+        </blockquote>
+        <div
+            class="concrete-dest-res-container offset-md-4 col-md-4 offset-sm-3 col-sm-6 offset-2 col-8">
+            <a href="/index.html" class="concrete-dest-res-button">
+              <div id="concrete-dest-res-text">Volver a la pagina de inicio</div>
+            </a>
+      </div>
+    </main>
+
+    <footer><%- include ('pieces/footer')%></footer>
+  </body>
+</html>

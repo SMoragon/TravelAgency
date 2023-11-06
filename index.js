@@ -6,7 +6,7 @@ const port = 3000;
 const app = express();
 const dao = require("./dao.js");
 const pool = require("./pool.js");
-const bodyParser= require ("body-parser")
+const bodyParser = require("body-parser");
 const expressValidator = require("express-validator");
 
 var destPool = new pool("localhost", "admin_aw", "", "viajes");
@@ -15,13 +15,11 @@ var destDao = new dao(destPool.get_pool());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.use(
-  expressValidator()
-);
+app.use(expressValidator());
 
-function checkFecha (data) {
-  var fecha1=data[0];
-  var fecha2=data[1];
+function checkFecha(data) {
+  var fecha1 = data[0];
+  var fecha2 = data[1];
   //fecha1 = `${fecha1.getFullYear()}-${fecha1.getMonth() + 1}-${fecha1.getDate()}`;
   //fecha2 = `${fecha2.getFullYear()}-${fecha2.getMonth() + 1}-${fecha2.getDate()}`;
   return fecha1 < fecha2;
@@ -66,7 +64,7 @@ app.get("/destinos/:id", (request, response, next) => {
         res.map((obj) => {
           context = obj;
         });
-        response.status(200).render("generalDestiny.ejs", { datos: context });
+        response.status(200).render("generalDestiny.ejs", { datos: context, showModal:false });
       } else {
         next();
       }
@@ -84,7 +82,7 @@ app.get("/destinos/albacete.html", (request, response, next) => {
         res.map((obj) => {
           context = obj;
         });
-        response.status(200).render("generalDestiny.ejs", { datos: context });
+        response.status(200).render("generalDestiny.ejs", { datos: context, showModal:false });
       } else {
         next();
       }
@@ -102,7 +100,7 @@ app.get("/destinos/china.html", (request, response, next) => {
         res.map((obj) => {
           context = obj;
         });
-        response.status(200).render("generalDestiny.ejs", { datos: context });
+        response.status(200).render("generalDestiny.ejs", { datos: context, showModal:false });
       } else {
         next();
       }
@@ -120,7 +118,7 @@ app.get("/destinos/hawaii.html", (request, response, next) => {
         res.map((obj) => {
           context = obj;
         });
-        response.status(200).render("generalDestiny.ejs", { datos: context });
+        response.status(200).render("generalDestiny.ejs", { datos: context, showModal:false });
       } else {
         next();
       }
@@ -138,7 +136,7 @@ app.get("/destinos/milan.html", (request, response, next) => {
         res.map((obj) => {
           context = obj;
         });
-        response.status(200).render("generalDestiny.ejs", { datos: context });
+        response.status(200).render("generalDestiny.ejs", { datos: context, showModal:false });
       } else {
         next();
       }
@@ -156,7 +154,7 @@ app.get("/destinos/praga.html", (request, response, next) => {
         res.map((obj) => {
           context = obj;
         });
-        response.status(200).render("generalDestiny.ejs", { datos: context });
+        response.status(200).render("generalDestiny.ejs", { datos: context, showModal:false });
       } else {
         next();
       }
@@ -174,7 +172,7 @@ app.get("/destinos/rio.html", (request, response, next) => {
         res.map((obj) => {
           context = obj;
         });
-        response.status(200).render("generalDestiny.ejs", { datos: context });
+        response.status(200).render("generalDestiny.ejs", { datos: context, showModal:false });
       } else {
         next();
       }
@@ -183,7 +181,6 @@ app.get("/destinos/rio.html", (request, response, next) => {
 });
 
 app.post("/procesar_formulario", async (request, response) => {
-  
   // Todos los campos han de ser no vacíos.
   var arr_check = [
     "client-full-name",
@@ -191,44 +188,70 @@ app.post("/procesar_formulario", async (request, response) => {
     "client-res-from-date",
     "client-res-to-date",
   ];
- // request
-  //  .checkBody(arr_check, "Todos los campos deben estar rellenos.")
-   // .notEmpty();
 
+  // request
+  //  .checkBody(arr_check, "Todos los campos deben estar rellenos.")
+  // .notEmpty();
+  request
+    .checkBody(
+      "client-full-name",
+      "El campo 'Nombre y apellidos' debe estar completo."
+    )
+    .notEmpty();
   // El campo email ha de ser una dirección de correo válida.
-  console.log(request.body)
-  request.checkBody("client-email", "Dirección de correo no válida").isEmail();
+  request
+    .checkBody(
+      "client-email",
+      "La dirección de correo electrónico no es válida."
+    )
+    .notEmpty()
+    .isEmail();
 
   // La fecha de ida debe ser posterior a la actual.
   request
     .checkBody(
       "client-res-from-date",
-      "La fecha actual debe ser anterior a la de ida"
+      "La fecha de ida debe de ser posterior o la misma que la actual, y no vacía."
     )
-    .isAfter();
+    .notEmpty()
+    .isAfter(new Date().toDateString());
 
-  // La fecha de vuelta debe ser posterior a la actual.
+  // La fecha de vuelta debe ser posterior a la de ida.
   request
     .checkBody(
       "client-res-to-date",
-      "La fecha actual debe ser anterior a la de vuelta"
+      "La fecha de vuelta debe de ser posterior o la misma a la de la ida, y no vacía."
     )
-    .isAfter();
+    .notEmpty()
+    .isAfter(new Date(request.body["client-res-from-date"]).toDateString())
+    .isAfter(new Date().toDateString());
 
-  // La fecha de vuelta debe ser posterior a la de ida.
-  var dates_check = ["client-res-from-date", "client-res-to-date"];
-  request
-    .checkBody(dates_check, "La fecha de ida debe ser anterior a la de vuelta")
-    .customSanitizer(checkFecha(dates_check));
-
+  /*  console.log("actual: ",new Date().toDateString())
+    console.log("ida: ",new Date(request.body["client-res-from-date"]).toDateString())
+    console.log("vuelta: ",new Date(request.body["client-res-from-date"]).toDateString())*/
   request.getValidationResult().then(async (result) => {
     // Si no hay errores, subimos la información a la BD.
     if (result.isEmpty()) {
-      var res_result=await reservar(result);
-      response.send(`<h1> ${res_result} </h1>`);
+      //var res_result=await reservar(result);
+      response.redirect("/");
     } else {
-      console.log(result.mapped())
-      //response.render("resForm", { errores: result.array() });
+      console.log(request.body)
+      console.log("errores: ", result.mapped());
+      destDao.leerDestinoNombre(request.body["site-name"], (err, res) => {
+        if (err) {
+          next();
+        } else {
+          var context;
+          if (res.length != 0) {
+            res.map((obj) => {
+              context = obj;
+            });
+            response.status(200).render("generalDestiny.ejs", { errores: result.array(), datos: context, showModal:true });
+          } else {
+            next();
+          }
+        }
+      });
     }
   });
 });
@@ -245,35 +268,59 @@ app.listen(port, (err) => {
   }
 });
 
-async function reservar(result){
+function reservar(request, response, name) {
+  destDao.leerDestinoNombre(name, (err, res) => {
+    if (err) {
+      response.status(404).send("<h1> Error 404: Error inesperado</h1>");
+    } else {
+      var datos = [
+        res[0].id,
+        request.body["client-full-name"],
+        request.body["client-email"],
+        new Date(request.body["client-res-from-date"]),
+        new Date(request.body["client-res-to-date"]),
+      ];
+      destDao.reservaDestino(datos, (err, res) => {
+        if (err) {
+          console.log(err);
+          response.status(404).send(`Error`);
+        } else {
+          response.render("reservaCompletada.ejs", { nombre: name });
+        }
+      });
+    }
+  });
+}
 
-   var name=result.site-name;
+async function reservar(result) {
+  var name = result.site - name;
 
-   var id= await destDao.leerDestinoNombre(name,async (err,res)=>{
-    if(err) return -1;
-    else{
+  var id = await destDao.leerDestinoNombre(name, async (err, res) => {
+    if (err) return -1;
+    else {
       return res[0].id;
     }
-   });
+  });
 
-   if(id==-1){
+  if (id == -1) {
     return "Ha habido un error al buscar el destino";
-   }
-   else{
-    var to_insert=[id];
-    result.array.forEach(element => {
+  } else {
+    var to_insert = [id];
+    result.array.forEach((element) => {
       to_insert.push(element.value);
     });
 
-    var res_result= await destDao.reservaDestino(to_insert,async(err,res)=>{
-      if(err){
-        return err;
-      } 
-      else{
-        return "¡Reserva completada!";
+    var res_result = await destDao.reservaDestino(
+      to_insert,
+      async (err, res) => {
+        if (err) {
+          return err;
+        } else {
+          return "¡Reserva completada!";
+        }
       }
-    });
-   }
-   
-   return res_result;
+    );
+  }
+
+  return res_result;
 }
