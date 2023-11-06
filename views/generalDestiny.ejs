@@ -102,12 +102,12 @@
                           <input type="text"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-full-name" id="client-full-name"
-                            <% if (typeof errores != "undefined" && errores["client-full-name"]) { %>
-                            value="<%= oldValues.client-full-name.value %>"
+                            <% if (locals.body) { %>
+                            value="<%= body["client-full-name"] %>"
                             <% } %>
                             >
                             <% if (locals.errores && errores["client-full-name"]) { %>
-                              <span class="text-danger"><%= errores.client-full-name.msg %></span>
+                              <span class="text-danger"><%= errores["client-full-name"].msg %></span>
                               <% } %>
 
                         </div>
@@ -119,10 +119,14 @@
                         <div class="col-6">
                           <input type="email"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            name="client-email" id="client-email">
+                            name="client-email" id="client-email"
+                            <% if (locals.body) { %>
+                              value="<%= body["client-email"] %>"
+                              <% } %>
+                              >
 
                             <% if (locals.errores && errores["client-email"]) { %>
-                              <span class="text-danger"><%= errores.client-email.msg %></span>
+                              <span class="text-danger"><%= errores["client-email"].msg %></span>
                               <% } %>
 
                         </div>
@@ -136,10 +140,14 @@
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-res-from-date"
-                            id="client-res-from-date">
+                            id="client-res-from-date"
+                            <% if (locals.body) { %>
+                              value="<%= body["client-res-from-date"] %>"
+                              <% } %>
+                              >
 
                               <% if (locals.errores && errores["client-res-from-date"]) { %>
-                              <span class="text-danger"><%= errores.client-res-from-date.msg %></span>
+                              <span class="text-danger"><%= errores["client-res-from-date"].msg %></span>
                               <% } %>
                         </div>
                       </div>
@@ -150,10 +158,14 @@
                         <div class="col-5">
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            name="client-res-to-date" id="client-res-to-date">
+                            name="client-res-to-date" id="client-res-to-date"
+                            <% if (locals.body) { %>
+                              value="<%= body["client-res-to-date"] %>"
+                              <% } %>
+                              >
                        
                             <% if (locals.errores && errores["client-res-to-date"]) { %>
-                              <span class="text-danger"><%= errores.client-res-to-date.msg %></span>
+                              <span class="text-danger"><%= errores["client-res-to-date"].msg %></span>
                               <% } %>
 
                         </div>
@@ -186,8 +198,6 @@
     <script src="/scripts/formValidation.js"></script>
   </body>
 
-
-  
     <% if (showModal) { %>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

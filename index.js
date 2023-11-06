@@ -235,7 +235,7 @@ app.post("/procesar_formulario", async (request, response) => {
       //var res_result=await reservar(result);
       response.redirect("/");
     } else {
-      console.log(request.body)
+      console.log(request.body["client-full-name"])
       console.log("errores: ", result.mapped());
       destDao.leerDestinoNombre(request.body["site-name"], (err, res) => {
         if (err) {
@@ -246,7 +246,7 @@ app.post("/procesar_formulario", async (request, response) => {
             res.map((obj) => {
               context = obj;
             });
-            response.status(200).render("generalDestiny.ejs", { errores: result.array(), datos: context, showModal:true });
+            response.status(200).render("generalDestiny.ejs", { errores: result.mapped(), datos: context, body:request.body, showModal:true });
           } else {
             next();
           }
