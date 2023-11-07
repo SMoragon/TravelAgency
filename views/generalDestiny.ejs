@@ -92,12 +92,14 @@
                     <form method="POST" action="/procesar_formulario">
 
                       <div class="form-group row">
-                        <label for="client-full-name"
-                          class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
-                          Nombre y Apellidos: </label>
-                          <input type="text"
+                        <input type="text"
                             name="site-name" id="site-name" style="display:none;" value="<%= datos.nombre %>">
-                        <div class="col-6">
+                        <label for="client-full-name"
+
+                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
+                          Nombre y Apellidos: </label>
+
+                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
 
                           <input type="text"
                             class="form-control form-control-sm concrete-dest-res-form-input"
@@ -114,9 +116,9 @@
                       </div>
                       <div class="form-group row">
                         <label for="client-email"
-                          class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
+                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Correo electrónico: </label>   
-                        <div class="col-6">
+                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
                           <input type="email"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-email" id="client-email"
@@ -133,9 +135,9 @@
                       </div>
                       <div class="form-group row">
                         <label for="client-res-from-date"
-                          class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
+                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Fecha de ida: </label>
-                        <div class="col-5">
+                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
 
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
@@ -153,9 +155,9 @@
                       </div>
                       <div class="form-group row">
                         <label for="client-res-to-date"
-                          class="offset-1 col-4 col-form-label concrete-dest-res-form-field">
+                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Fecha de vuelta: </label>
-                        <div class="col-5">
+                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
                           <input type="date"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-res-to-date" id="client-res-to-date"
@@ -189,8 +191,6 @@
       </div>
 
     </main>
-
-   
 
     <footer>
       <%- include ('pieces/footer')%>

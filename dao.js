@@ -14,11 +14,8 @@ class DAO {
   insertarDestino(destino, callback) {
     this.pool.getConnection((err, connection) => {
       if (err) {
-        callback(err)
-        //console.log("Ha ocurrido un error: ", err.message);
+        callback(err);
       } else {
-        // console.log("Conectado a la BD ");
-
         var imgRoute = destino[2];
         var img = undefined;
         try {
@@ -38,14 +35,13 @@ class DAO {
     });
   }
 
-   /* Función que, dado un identificador de destino, lee el destino asociado a ese ID de la BD y devuelve todos
+  /* Función que, dado un identificador de destino, lee el destino asociado a ese ID de la BD y devuelve todos
    sus parámetros (en caso de haberlos). */
   leerDestinoId(id, callback) {
     this.pool.getConnection((err, connection) => {
       if (err) {
         callback(err);
       } else {
-        //console.log("Conectado a la BD ");
         const sql = "Select * From destinos Where id = ?";
         connection.query(sql, id, callback);
         connection.release();
@@ -58,9 +54,8 @@ class DAO {
   leerDestinoNombre(name, callback) {
     this.pool.getConnection((err, connection) => {
       if (err) {
-        callback(err)
+        callback(err);
       } else {
-       // console.log("Conectado a la BD ");
         const sql = "Select * From destinos Where nombre = ?";
         connection.query(sql, name, callback);
         connection.release();
@@ -68,17 +63,15 @@ class DAO {
     });
   }
 
- /* Función que, dado un id válido de destino, un nombre, un correo, una fecha de reserva de ida y una de vuelta, genera
+  /* Función que, dado un id válido de destino, un nombre, un correo, una fecha de reserva de ida y una de vuelta, genera
    una nueva reserva en la tabla correspondiente. */
   reservaDestino(dato, callback) {
     this.pool.getConnection((err, connection) => {
       if (err) {
-        callback(err)
+        callback(err);
       } else {
-       // console.log("Conectado a la BD ");
         const sql =
-          "Insert Into reservas (destino_id, nombre_cliente, correo_cliente, fecha_reserva_ida, fecha_reserva_vuelta)"+
-          +" VALUES (?,?,?,?,?) ";
+          "Insert Into reservas (destino_id, nombre_cliente, correo_cliente, fecha_reserva_ida, fecha_reserva_vuelta) VALUES (?,?,?,?,?)";
         connection.query(sql, dato, callback);
         connection.release();
       }

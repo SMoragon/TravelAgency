@@ -224,10 +224,10 @@ a {
     max-height: 95%;
 }
 
-.popup-form-error{
-    display:none;
-    font-weight: bold;
+#congrats-msg{
+    text-align: center;
 }
+
 
 @media (min-width:768px) {
     #navbar-list {
