@@ -78,6 +78,32 @@ class DAO {
     });
   }
 
+  registrarUsuario(datos,callback){
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        const sql =
+          "Insert Into usuarios (correo, contraseña) VALUES (?,?)";
+        connection.query(sql, datos, callback);
+        connection.release();
+      }
+    });
+  }
+
+  buscarUsuario(correo,callback){
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        const sql =
+          "Select * From usuarios Where correo=?";
+        connection.query(sql, correo, callback);
+        connection.release();
+      }
+    });
+  }
+
   // Función que cierra el pool de conexiones una vez se hyaa terminado de hacer consultas.
   terminarConexion(callback) {
     this.pool.end(callback);

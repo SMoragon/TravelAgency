@@ -1,6 +1,13 @@
 <div class="top-page" id="cabecera">
     <div class="col-md-4 col-6" id="header-title">
         <img src="/Images/logo.png" alt="Logo de Viajes la Cienaga" />
+
+        <% if (typeof session !== 'undefined' && session.isLogged) { %>
+            <span class="text-alert"> ¡Bienvenido de nuevo, <%= session.user%>!</span>
+        <% } else { %>
+            <a href="/login">Login</a>
+        <% } %>
+
     </div>
     <nav class="navbar navbar-expand-md">
         <div class="container-fluid">

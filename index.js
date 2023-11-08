@@ -8,6 +8,21 @@ const dao = require("./dao.js");
 const pool = require("./pool.js");
 const bodyParser = require("body-parser");
 const expressValidator = require("express-validator");
+const session = require("express-session");
+const mysqlsession = require("express-mysql-session");
+const MYSQLStore = mysqlsession(session);
+const sessionStore = new MYSQLStore({
+  host: "localhost",
+  user: "admin_aw",
+  password: "",
+  database: "viajes",
+});
+const middlewareSession = session({
+  saveUninitialized: false,
+  secret: "viajesElCorteIngles224",
+  resave: false,
+  store: sessionStore,
+});
 
 var destPool = new pool("localhost", "admin_aw", "", "viajes");
 var destDao = new dao(destPool.get_pool());
@@ -15,12 +30,18 @@ var destDao = new dao(destPool.get_pool());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(middlewareSession);
+
 app.use(expressValidator());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
 // Enrutamiento de las páginas principales de nuestra aplicación.
 app.get("/", (request, response) => {
   response.status(200).render("index.ejs");
@@ -46,7 +67,7 @@ app.get("/reservas.html", (request, response) => {
   response.status(200).render("reservas.ejs");
 });
 
-// Gestión de las rutas de destinos paramétricas (es decir, aquellas en las que el usuario en lugar de 
+// Gestión de las rutas de destinos paramétricas (es decir, aquellas en las que el usuario en lugar de
 // introducir un nombre de destino, introduce un id).
 app.get("/destinos/:id", (request, response, next) => {
   sendToDestinyId(request, response, next);
@@ -77,6 +98,72 @@ app.get("/destinos/rio.html", (request, response, next) => {
   sendToDestiny(response, "Río de Janeiro", next);
 });
 
+app.get("/register", (request, response, next) => {
+  response.status(200).render("register.ejs");
+});
+
+app.post("/register", (request, response, next) => {
+  destDao.buscarUsuario(request.body["user-email"], (err, res) => {
+    if (err) {
+      response.status(403).render("register.ejs", {
+        errors: "Ha ocurrido un error interno en el acceso a la BD.",
+      });
+    } else {
+      if (res.length != 0) {
+        response.status(403).render("register.ejs", {
+          errors: "El correo introducido ya está registrado.",
+        });
+      } else {
+        var datos = [request.body["user-email"], request.body["user-password"]];
+        destDao.registrarUsuario(datos, (err, res) => {
+          if (err) {
+            response.status(403).render("register.ejs", {
+              errors: "Ha ocurrido un error interno en el acceso a la BD.",
+            });
+          } else {
+            response.status(200).render("registroCompletado.ejs");
+          }
+        });
+      }
+    }
+  });
+});
+
+app.get("/login", (request, response, next) => {
+  response.status(200).render("login.ejs");
+});
+
+app.post("/login", (request, response, next) => {
+  destDao.buscarUsuario(request.body["user-email"], (err, res) => {
+    if (err) {
+      response.status(403).render("login.ejs", {
+        errors: "Ha ocurrido un error interno en el acceso a la BD.",
+      });
+    } else {
+      if (res.length == 0) {
+        response.status(403).render("login.ejs", {
+          errors: "El usuario introducido no está registrado.",
+        });
+      } else {
+        var context;
+        res.map((obj) => {
+          context = obj;
+        });
+
+        if (request.body["user-password"] != context.contraseña) {
+          response.status(403).render("login.ejs", {
+            errors: "La contraseña introducida no es correcta.",
+          });
+        } else {
+          request.session.isLogged = true;
+          request.session.user = request.body["user-email"];
+          response.status(200).render("index.ejs"); // De momento index, ya cogeremos la ruta en la que estaba
+        }
+      }
+    }
+  });
+});
+
 app.post("/procesar_formulario", async (request, response) => {
   // Se procede a la validación de los datos del usuario.
   validateForm(request);
@@ -85,7 +172,7 @@ app.post("/procesar_formulario", async (request, response) => {
     // Si no hay errores, subimos la información a la BD.
     if (result.isEmpty()) {
       reservar(request, response);
-    } 
+    }
     // Si no, se vuelve a renderizar la página en la que estaba el usuario, con el formulario
     // abierto, relleno y con los errores que se han producido.
     else {
@@ -199,7 +286,6 @@ function sendToDestinyId(request, response, next) {
 
 // Validación de todos los datos introducidos por el usuario en el formulario de reserva.
 function validateForm(request) {
-
   // Todos los campos han de ser no vacíos.
   request
     .checkBody(
