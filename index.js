@@ -7,7 +7,6 @@ const app = express();
 const dao = require("./dao.js");
 const pool = require("./pool.js");
 const bodyParser = require("body-parser");
-const expressValidator = require("express-validator");
 const session = require("express-session");
 const mysqlsession = require("express-mysql-session");
 const MYSQLStore = mysqlsession(session);
@@ -33,8 +32,6 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(middlewareSession);
-
-app.use(expressValidator());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
