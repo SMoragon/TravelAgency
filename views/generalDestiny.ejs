@@ -21,7 +21,7 @@
 
   <body>
 
-    <!-- Use of ejs to avoid copy-pasting the whole header -->
+    <!-- Use of ejs to avoid copy-pasting the whole header. -->
     <header>
       <%- include ('pieces/header')%>
     </header>
@@ -31,15 +31,13 @@
     <div class="container-fluid">
 
       <!-- Destiny name (title of the main content in the WP) gotm by params in the render(template) call. -->
-
       <p class="concrete-dest-title">
         <%= datos.nombre.toUpperCase() %>
       </p>
 
       <div class="row mb-5">
 
-        <!-- Image got by the render call, codified from BLOB (DB storage format) to base-64 (human-visible) -->
-
+      <!-- Concrete destiny's carosuel of images.-->
         <div id="destinyCarrousel" class="carousel slide ml-10 col-md-5 col-sm-12 col-12" data-bs-ride="carousel">
 
           <div class="carousel-inner">
@@ -62,6 +60,7 @@
                 </div>
               </div>
             </div>
+                  <!-- Dynamically charge images on the carosuel.-->
             <% if (locals.imgs) { %>
               <% imgs.forEach(element=> { %>
                 <div class="carousel-item">
@@ -80,6 +79,7 @@
 
                 </div>
                 <% }); %>
+                       <!-- Prev-next buttons the carosuel.-->
                   <button class="carousel-control-prev" type="button" data-bs-target="#destinyCarrousels"
                     data-bs-slide="prev">
 
@@ -125,7 +125,7 @@
             </a>
           </div>
 
-          <!-- Modal with the information of the flight booked. -->
+          <!-- Modal with the information of the booked flight. -->
           <div class="modal modal-lg fade in" id="concrete-dest-res-form"
             data-bs-backdrop="static">
 
@@ -143,14 +143,15 @@
                 <div class="modal-body">
                   <div class="container-fluid">
 
-                    <!--  -->
+                    <!-- Form with the booked flight's info, which will be passed to the server after cient's validation to make
+                         some more and submit it to the database if all is correct. -->
                     <form id="register-form" method="POST" action="/procesar_formulario">
 
                       <div class="form-group row">
                         <input type="hidden"
                             name="site-name" id="site-name" value="<%= datos.nombre %>">
+                        <!-- Client's full name. -->
                         <label for="client-full-name"
-
                           class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Nombre y Apellidos: </label>
 
@@ -165,6 +166,7 @@
                       </div>
 
                       <div class="form-group row">
+                                      <!-- Client's date to the outbound flight. -->
                         <label for="client-res-from-date"
                           class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Fecha de ida: </label>
@@ -178,14 +180,17 @@
                         </div>
                       </div>
                       <div class="form-group row">
+                          <!-- Client's date to the return flight. -->
                         <label for="client-res-to-date"
                           class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Fecha de vuelta: </label>
                         <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
+
                           <input type="date" onkeydown="return false"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-res-to-date" id="client-res-to-date">
 
+                            <!-- Popup's filled with client validation's errors, that will be shown if there's anything wrong. -->
                             <span class="popup-form-error text-danger"
                             id="empty-error">Todos
                             los campos deben estar rellenos.</span>
@@ -198,6 +203,7 @@
                     
                   </div>
                 </div>
+                     <!-- Submit/cancel buttons. -->
                 <div class="modal-footer">
                   <input type="submit" value="ENVIAR"
                     class="concrete-dest-res-form-but"></input>
@@ -214,13 +220,15 @@
       </div>
 
     </main>
-
+  <!-- Dynamically footer's inclusion. -->
     <footer>
       <%- include ('pieces/footer')%>
     </footer>
   
   </body>
+   <!-- Client's validation script. -->
   <script src="/scripts/formValidation.js"></script>
+     <!-- Script to ensure that the form will not be sended to the server while there are still errors. -->
     <script>
         document.getElementById('register-form').addEventListener('submit', function(event) {
             

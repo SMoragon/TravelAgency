@@ -190,6 +190,11 @@ app.listen(port, (err) => {
   }
 });
 
+/* Función para realizar una reserva. Si el usuario no está logueado, se le
+indica que debe hacerlo para poder reservar a través de la página
+"reservaSinLogin.ejs". Si no, en caso de haber un error en la base de datos, lo lanza
+y redirige al usuario a esa página. En otro caso, la reserva se completa y se le 
+notifica al usuario.*/
 function reservar(request, response) {
   if (request.session.isLogged !== true) {
     response.status(403).render("reservaSinLogin.ejs");

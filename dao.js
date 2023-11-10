@@ -104,6 +104,8 @@ class DAO {
     });
   }
 
+    /* Función que, dado un correo y una contraseña válidos, inserta un usuario en
+    la base de datos, para que pase a estar registrado. */
   registrarUsuario(datos,callback){
     this.pool.getConnection((err, connection) => {
       if (err) {
@@ -117,6 +119,10 @@ class DAO {
     });
   }
 
+    /* Función que, dado un correo válido, comprueba si ya existe un usuario con
+    ese correo o no (ideal para validar en el register que un usuario tiene ya
+    ese correo vinculado a su cuenta, para evitar múltiples cuentas con un mismo
+    correo) */
   buscarUsuario(correo,callback){
     this.pool.getConnection((err, connection) => {
       if (err) {

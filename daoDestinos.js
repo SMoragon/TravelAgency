@@ -38,9 +38,6 @@ function cb_leer(err, res) {
     }
     else {
       res.map((obj) => {
-       // console.log(
-       //   `Nombre: ${obj.nombre}, Descripción: ${obj.descripcion}, Precio: ${obj.precio}`
-       // );
       });
     }
   }
@@ -48,8 +45,8 @@ function cb_leer(err, res) {
 
 function cb_insertar(err, resultado) {
   if (err) {
-    console.log("ERROR AL INSERTAR DESTINO", err);
+    //console.log("ERROR AL INSERTAR DESTINO", err);
   } else {
-    console.log(`EXITO AL INSERTAR DESTINO CON EL ID: ${resultado.insertId}`);
+    //console.log(`EXITO AL INSERTAR DESTINO CON EL ID: ${resultado.insertId}`);
   }
 }
