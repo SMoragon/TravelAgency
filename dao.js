@@ -35,6 +35,32 @@ class DAO {
     });
   }
 
+  insertarImagen(datos, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+
+        const sql =
+          "Insert Into imagen (destino_id, img, descripcion) VALUES (?,?,?) ";
+        connection.query(sql, datos, callback);
+        connection.release();
+      }
+    });
+  }
+  leerImagen(id, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+
+        const sql =
+          "Select * From imagen Where destino_id = ?";
+        connection.query(sql, id, callback);
+        connection.release();
+      }
+    });
+  }
   /* Función que, dado un identificador de destino, lee el destino asociado a ese ID de la BD y devuelve todos
    sus parámetros (en caso de haberlos). */
   leerDestinoId(id, callback) {

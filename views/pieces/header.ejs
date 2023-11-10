@@ -1,38 +1,56 @@
 <div class="top-page" id="cabecera">
-    <div class="col-md-4 col-6" id="header-title">
-        <img src="/Images/logo.png" alt="Logo de Viajes la Cienaga" />
 
-        <% if (typeof session !== 'undefined' && session.isLogged) { %>
-            <span class="text-alert"> ¡Bienvenido de nuevo, <%= session.user%>!</span>
-        <% } else { %>
-            <a href="/login">Login</a>
-        <% } %>
+    <div class="col-12"
+        style="display: flex;flex-wrap: wrap; align-items: center;">
 
-    </div>
-    <nav class="navbar navbar-expand-md">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse container-fluid" id="navbarNav">
-                <ul class="navbar-nav" id="navbar-list">
-                    <li class="nav-item">
-                        <a href="/index.html" class="nav-link" aria-current="page">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/destinos.html" class="nav-link">Destinos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/reservas.html" class="nav-link">Sus reservas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/sostenibilidad.html" class="nav-link">Sostenibilidad</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/nosotros.html" class="nav-link">Sobre nosotros</a>
-                    </li>
-                </ul>
+        <div class="col-md-5 col-sm-6 col-10" id="header-title"">
+            <img class="col-md-5 col-sm-10 col-12" src="/Images/logo.png"
+                alt="Logo de Viajes la Cienaga" />
+        </div>
+
+        <div class="col-md-6 col-5">
+            <div id="login-container">
+            <% if (typeof session !== 'undefined' && session.isLogged) { %>
+                <span class="login-text" id="hello-user"> ¡Bienvenido
+                    de nuevo, <%= session.user%>!</span><br>
+                <a class="login-text" href="/logout">Logout</a>
+
+                <% } else { %>
+
+                <a href="/login">Login</a>
+                <% } %>
+            </div>
             </div>
         </div>
-    </nav>
+        <nav class="navbar navbar-expand-md">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse container-fluid" id="navbarNav">
+                    <ul class="navbar-nav" id="navbar-list">
+                        <li class="nav-item">
+                            <a href="/index.html" class="nav-link"
+                                aria-current="page">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/destinos.html" class="nav-link">Destinos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/reservas.html" class="nav-link">Sus reservas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/sostenibilidad.html" class="nav-link">Sostenibilidad</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/nosotros.html" class="nav-link">Sobre nosotros</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+  
 </div>

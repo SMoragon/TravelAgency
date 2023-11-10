@@ -28,38 +28,93 @@
 
     <main id="main">
 
-      <div class="container-fluid">
+    <div class="container-fluid">
 
-        <!-- Destiny name (title of the main content in the WP) gotm by params in the render(template) call. -->
+      <!-- Destiny name (title of the main content in the WP) gotm by params in the render(template) call. -->
 
-        <p class="concrete-dest-title"><%= datos.nombre.toUpperCase() %></p>
+      <p class="concrete-dest-title">
+        <%= datos.nombre.toUpperCase() %>
+      </p>
 
-        <div class="row mb-5">
+      <div class="row mb-5">
 
-          <!-- Image got by the render call, codified from BLOB (DB storage format) to base-64 (human-visible) -->
+        <!-- Image got by the render call, codified from BLOB (DB storage format) to base-64 (human-visible) -->
 
-          <img class="concrete-dest-image ml-5 col-md-5 col-sm-12 col-12"
-            src="data:image/png;base64,<%=datos.imagen.toString('base64')%>"
-            alt= <%=datos.descripcion %>
-          >
+        <div id="destinyCarrousel" class="carousel slide ml-10 col-md-5 col-sm-12 col-12" data-bs-ride="carousel">
 
-          <!-- Destiny content (a description of the offer, for instance). -->
-          <p class="concrete-dest-text col-md-5 offset-1 col-sm-10 col-10">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-            voluptate magni dolores nulla. Reiciendis, ex tempora explicabo,
-            culpa
-            quae cumque veritatis quo est nulla assumenda vitae? Saepe molestias
-            perferendis dolores.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
-            voluptate magni dolores nulla. Reiciendis, ex tempora explicabo,
-            culpa
-            quae cumque veritatis quo est nulla assumenda vitae? Saepe molestias
-            perferendis dolores.
+          <div class="carousel-inner">
 
-          </p>
+            <div class="carousel-item active" data-bs-interval="2000">
+              <img src="<%=datos.imagen%>" class="d-block w-100" alt="<%=datos.descripcion%>" type="button"
+                data-bs-toggle="modal" data-bs-target="#dialog-1">
 
-          <!-- Book flight button, that will toggle a modal where the form will be displayed. -->
+              <div class="modal top fade" id="dialog-1" data-bs-backdrop="static">
+
+                <div class="modal-dialog modal-fullscreen">
+                  <div class="modal-content modal-destiny-container">
+
+                    <div class="modal-body container">
+                      <button type="button" class="btn-close modal-destiny-button" data-bs-dismiss="modal"></button>
+                      <img src="<%=datos.imagen%>" alt="<%=datos.descripcion%>" class="w-100 modal-destiny-image">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% if (locals.imgs) { %>
+              <% imgs.forEach(element=> { %>
+                <div class="carousel-item">
+                  <img src="<%=element.img%>" class="d-block w-100" alt="<%=element.descripcion%>" type="button"
+                    data-bs-toggle="modal" data-bs-target="#extra<%=element.id%>">
+                  <div class="modal top fade" id="extra<%=element.id%>" data-bs-backdrop="static">
+                    <div class="modal-dialog modal-fullscreen">
+                      <div class="modal-content modal-destiny-container">
+                        <div class="modal-body container">
+                          <button type="button" class="btn-close modal-destiny-button" data-bs-dismiss="modal"></button>
+                          <img src="<%=element.img%>" alt="<%=element.descripcion%>" class="w-100 modal-destiny-image">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <% }); %>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#destinyCarrousels"
+                    data-bs-slide="prev">
+
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+
+                  </button>
+
+                  <button class="carousel-control-next" type="button" data-bs-target="#destinyCarrousel"
+                    data-bs-slide="next">
+
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+
+                  </button>
+                  <% } %>
+          </div>
         </div>
+        <!-- Destiny content (a description of the offer, for instance). -->
+        <p class="concrete-dest-text col-md-5 offset-1 col-sm-10 col-10">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
+          voluptate magni dolores nulla. Reiciendis, ex tempora explicabo,
+          culpa
+          quae cumque veritatis quo est nulla assumenda vitae? Saepe molestias
+          perferendis dolores.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
+          voluptate magni dolores nulla. Reiciendis, ex tempora explicabo,
+          culpa
+          quae cumque veritatis quo est nulla assumenda vitae? Saepe molestias
+          perferendis dolores.
+        </p>
+      </div>
+
+      <!-- Book flight button, that will toggle a modal where the form will be displayed. -->
+    </div>
 
         <div class="row">
           <div
@@ -89,7 +144,7 @@
                   <div class="container-fluid">
 
                     <!--  -->
-                    <form method="POST" action="/procesar_formulario">
+                    <form id="register-form" method="POST" action="/procesar_formulario">
 
                       <div class="form-group row">
                         <input type="hidden"
@@ -103,54 +158,23 @@
 
                           <input type="text"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            name="client-full-name" id="client-full-name"
-                            <% if (locals.body) { %>
-                            value="<%= body["client-full-name"] %>"
-                            <% } %>
-                            >
-                            <% if (locals.errores && errores["client-full-name"]) { %>
-                              <span class="text-danger"><%= errores["client-full-name"].msg %></span>
-                              <% } %>
+                            name="client-full-name" id="client-full-name">
+                          
 
                         </div>
                       </div>
-                      <div class="form-group row">
-                        <label for="client-email"
-                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
-                          Correo electrónico: </label>   
-                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
-                          <input type="email"
-                            class="form-control form-control-sm concrete-dest-res-form-input"
-                            name="client-email" id="client-email"
-                            <% if (locals.body) { %>
-                              value="<%= body["client-email"] %>"
-                              <% } %>
-                              >
 
-                            <% if (locals.errores && errores["client-email"]) { %>
-                              <span class="text-danger"><%= errores["client-email"].msg %></span>
-                              <% } %>
-
-                        </div>
-                      </div>
                       <div class="form-group row">
                         <label for="client-res-from-date"
                           class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Fecha de ida: </label>
                         <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
 
-                          <input type="date"
+                          <input type="date" onkeydown="return false"
                             class="form-control form-control-sm concrete-dest-res-form-input"
                             name="client-res-from-date"
-                            id="client-res-from-date"
-                            <% if (locals.body) { %>
-                              value="<%= body["client-res-from-date"] %>"
-                              <% } %>
-                              >
+                            id="client-res-from-date">
 
-                              <% if (locals.errores && errores["client-res-from-date"]) { %>
-                              <span class="text-danger"><%= errores["client-res-from-date"].msg %></span>
-                              <% } %>
                         </div>
                       </div>
                       <div class="form-group row">
@@ -158,17 +182,16 @@
                           class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                           Fecha de vuelta: </label>
                         <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
-                          <input type="date"
+                          <input type="date" onkeydown="return false"
                             class="form-control form-control-sm concrete-dest-res-form-input"
-                            name="client-res-to-date" id="client-res-to-date"
-                            <% if (locals.body) { %>
-                              value="<%= body["client-res-to-date"] %>"
-                              <% } %>
-                              >
-                       
-                            <% if (locals.errores && errores["client-res-to-date"]) { %>
-                              <span class="text-danger"><%= errores["client-res-to-date"].msg %></span>
-                              <% } %>
+                            name="client-res-to-date" id="client-res-to-date">
+
+                            <span class="popup-form-error text-danger"
+                            id="empty-error">Todos
+                            los campos deben estar rellenos.</span>
+                            
+                            <span class="popup-form-error text-danger"
+                            id="date-error">La fecha de vuelta debe ser posterior o igual a la actual y a la de ida.</span>
 
                         </div>
                       </div>
@@ -195,17 +218,18 @@
     <footer>
       <%- include ('pieces/footer')%>
     </footer>
-    <script src="/scripts/formValidation.js"></script>
+  
   </body>
-
-    <% if (showModal) { %>
+  <script src="/scripts/formValidation.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var modal = new bootstrap.Modal(document.getElementById('concrete-dest-res-form'));
-            modal.show();
-        });
-      </script>  
-    <% } %>
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            
+      if (!validate()) {
+        event.preventDefault(); // Evita que se envíe el formulario si la validación falla
+      }
+    });
+  
+      </script>
 
 </script>
 </html>

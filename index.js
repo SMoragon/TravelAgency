@@ -30,13 +30,13 @@ var destDao = new dao(destPool.get_pool());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(middlewareSession);
 
 app.use(expressValidator());
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
@@ -129,6 +129,14 @@ app.post("/register", (request, response, next) => {
   });
 });
 
+app.get("/logout", (request, response, next) => {
+ 
+  const redirectTo = request.get('Referer') || '/'; // Obtener la URL anterior o redirigir a la raíz '/'
+  request.session.isLogged = false;
+  request.session.user = undefined;
+  response.status(200).render("index.ejs");
+});
+
 app.get("/login", (request, response, next) => {
   response.status(200).render("login.ejs");
 });
@@ -157,7 +165,7 @@ app.post("/login", (request, response, next) => {
         } else {
           request.session.isLogged = true;
           request.session.user = request.body["user-email"];
-          response.status(200).render("index.ejs"); // De momento index, ya cogeremos la ruta en la que estaba
+          response.status(200).redirect("index.html"); // De momento index, ya cogeremos la ruta en la que estaba
         }
       }
     }
@@ -165,39 +173,7 @@ app.post("/login", (request, response, next) => {
 });
 
 app.post("/procesar_formulario", async (request, response) => {
-  // Se procede a la validación de los datos del usuario.
-  validateForm(request);
-
-  request.getValidationResult().then(async (result) => {
-    // Si no hay errores, subimos la información a la BD.
-    if (result.isEmpty()) {
-      reservar(request, response);
-    }
-    // Si no, se vuelve a renderizar la página en la que estaba el usuario, con el formulario
-    // abierto, relleno y con los errores que se han producido.
-    else {
-      destDao.leerDestinoNombre(request.body["site-name"], (err, res) => {
-        if (err) {
-          next();
-        } else {
-          var context;
-          if (res.length != 0) {
-            res.map((obj) => {
-              context = obj;
-            });
-            response.status(200).render("generalDestiny.ejs", {
-              errores: result.mapped(),
-              datos: context,
-              body: request.body,
-              showModal: true,
-            });
-          } else {
-            next();
-          }
-        }
-      });
-    }
-  });
+  reservar(request, response);
 });
 
 // Middleware para manejar rutas que no pertenezcan a la aplicación.
@@ -215,28 +191,32 @@ app.listen(port, (err) => {
 });
 
 function reservar(request, response) {
-  destDao.leerDestinoNombre(request.body["site-name"], (err, res) => {
-    if (err) {
-      response.status(403).send(`<h1>Error:${err}</h1>`);
-    } else {
-      var datos = [
-        res[0].id,
-        request.body["client-full-name"],
-        request.body["client-email"],
-        new Date(request.body["client-res-from-date"]),
-        new Date(request.body["client-res-to-date"]),
-      ];
-      destDao.reservaDestino(datos, (err, res) => {
-        if (err) {
-          response.status(403).send(`<h1>Error:${err}</h1>`);
-        } else {
-          response.render("reservaCompletada.ejs", {
-            nombre: request.body["site-name"],
-          });
-        }
-      });
-    }
-  });
+  if (request.session.isLogged !== true) {
+    response.status(403).render("reservaSinLogin.ejs");
+  } else {
+    destDao.leerDestinoNombre(request.body["site-name"], (err, res) => {
+      if (err) {
+        response.status(403).send(`<h1>Error:${err}</h1>`);
+      } else {
+        var datos = [
+          res[0].id,
+          request.body["client-full-name"],
+          request.session.user,
+          new Date(request.body["client-res-from-date"]),
+          new Date(request.body["client-res-to-date"]),
+        ];
+        destDao.reservaDestino(datos, (err, res) => {
+          if (err) {
+            response.status(403).send(`<h1>Error:${err}</h1>`);
+          } else {
+            response.render("reservaCompletada.ejs", {
+              nombre: request.body["site-name"],
+            });
+          }
+        });
+      }
+    });
+  }
 }
 
 // Dado un nombre de destino, redirige al usuario a la página de destino asociada a ese nombre
@@ -251,9 +231,27 @@ function sendToDestiny(response, name, next) {
         res.map((obj) => {
           context = obj;
         });
-        response
-          .status(200)
-          .render("generalDestiny.ejs", { datos: context, showModal: false });
+        destDao.leerImagen(context.id, (err, res) => {
+          if (err) {
+            next();
+          } else {
+            if (res.length != 0) {
+              res.forEach((element) => {
+                element.img = path.normalize(element.img);
+              });
+              response.status(200).render("generalDestiny.ejs", {
+                datos: context,
+                imgs: res,
+                showModal: false,
+              });
+            } else {
+              response.status(200).render("generalDestiny.ejs", {
+                datos: context,
+                showModal: false,
+              });
+            }
+          }
+        });
       } else {
         next();
       }
@@ -274,9 +272,27 @@ function sendToDestinyId(request, response, next) {
         res.map((obj) => {
           context = obj;
         });
-        response
-          .status(200)
-          .render("generalDestiny.ejs", { datos: context, showModal: false });
+        destDao.leerImagen(context.id, (err, res) => {
+          if (err) {
+            next();
+          } else {
+            if (res.length != 0) {
+              res.forEach((element) => {
+                element.img = path.normalize(element.img);
+              });
+              response.status(200).render("generalDestiny.ejs", {
+                datos: context,
+                imgs: res,
+                showModal: false,
+              });
+            } else {
+              response.status(200).render("generalDestiny.ejs", {
+                datos: context,
+                showModal: false,
+              });
+            }
+          }
+        });
       } else {
         next();
       }

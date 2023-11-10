@@ -26,7 +26,7 @@
         <main id="main">
 
             <div class="container">
-                <form method="POST" action="/login">
+                <form id="login-form" method="POST" action="/login">
 
                     <div class="form-group row">
 
@@ -41,6 +41,12 @@
                                 class="form-control form-control-sm concrete-dest-res-form-input"
                                 name="user-email" id="user-email">
 
+                            <span class="popup-form-error text-danger"
+                                id="mail-error">El
+                                email introducido no es correcto. El formato
+                                debe
+                                ser "abcde@fghi.jkl".</span>
+
                         </div>
                     </div>
 
@@ -50,19 +56,30 @@
                             Contraseña: </label>
                         <div
                             class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
+
                             <input type="password"
                                 class="form-control form-control-sm concrete-dest-res-form-input"
                                 name="user-password" id="user-password">
+
+                            <span class="popup-form-error text-danger"
+                                id="empty-error">Todos
+                                los campos deben estar rellenos.</span>
+
                         </div>
                     </div>
 
                     <% if (locals.errors) { %>
-                        <span class="text-danger"><%= errors %></span>
-                        <% } %>
+                    <span class="text-danger"><%= errors %></span>
+                    <% } %>
 
-                    <input type="submit" value="ENVIAR"
-                        class="concrete-dest-res-form-but"></input>
-                <button type="button" class="concrete-dest-res-form-but">CERRAR</button>
+                    <div class="send-buttons">
+                        <input id="send-but" type="submit" value="ENVIAR"
+                            class="concrete-dest-res-form-but"></input>
+
+                    <button type="button" class="concrete-dest-res-form-but"
+                        onclick="closeAndRedirect('/')"> CERRAR</button>
+                </div>
+
                 <a href="/register">¿Aún no tienes una cuenta? Regístrate aquí</a>
             </div>
         </main>
@@ -72,5 +89,14 @@
         </footer>
 
     </body>
-
+    <script src="/scripts/loginValidation.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            
+      if (!validate()) {
+        event.preventDefault(); // Evita que se envíe el formulario si la validación falla
+      }
+    });
+  
+      </script>
 </html>

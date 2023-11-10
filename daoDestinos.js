@@ -13,16 +13,18 @@ const pool = require("./pool.js")
   password: "",
   database: "viajes",
 });
-
+*/
 var p=new pool("localhost", "admin_aw", "", "viajes");
 var destDao = new dao(p.get_pool());
-
+/*
 var imgPath = path.join(__dirname,"public","Images","rioasaExt.jpg");
 
 var destino = ["Río de Janeiro", "Imagen del amanecer de Rio de Janeiro", imgPath, 312.99];
 
 destDao.insertarDestino(destino,cb_insertar)*/
-
+var imgPath = path.join("/","Images","chinaCard.jpg");
+var datos = [2,imgPath,"Imagen de la muralla China"]
+destDao.insertarImagen(datos,cb_insertar);
 /*
 var dest_id = "Hawaii"; // nombre o id del destino
 destDao.leerDestinoNombre(dest_id, cb_leer);*/
@@ -46,8 +48,8 @@ function cb_leer(err, res) {
 
 function cb_insertar(err, resultado) {
   if (err) {
-  //  console.log("ERROR AL INSERTAR DESTINO", err);
+    console.log("ERROR AL INSERTAR DESTINO", err);
   } else {
-   // console.log(`EXITO AL INSERTAR DESTINO CON EL ID: ${resultado.insertId}`);
+    console.log(`EXITO AL INSERTAR DESTINO CON EL ID: ${resultado.insertId}`);
   }
 }

@@ -26,7 +26,7 @@
         <main id="main">
 
             <div class="container">
-                <form method="POST" action="/register">
+                <form id="register-form" method="POST" action="/register">
 
                     <div class="form-group row">
 
@@ -40,6 +40,11 @@
                             <input type="text"
                                 class="form-control form-control-sm concrete-dest-res-form-input"
                                 name="user-email" id="user-email">
+                            <span class="popup-form-error text-danger"
+                                id="mail-error">El
+                                email introducido no es correcto. El formato
+                                debe
+                                ser "abcde@fghi.jkl".</span>
 
                         </div>
                     </div>
@@ -57,35 +62,50 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="client-res-from-date"
+                        <label for="user-password-again"
                             class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
                             Vuelva a introducir la contraseña: </label>
                         <div
                             class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
-    
+
                             <input type="password"
                                 class="form-control form-control-sm concrete-dest-res-form-input"
-                                name="user-password-again" id="user-password-again">
-        
+                                name="user-password-again"
+                                id="user-password-again">
+
+                            <span class="popup-form-error text-danger"
+                                id="password-error">Las contraseñas no
+                                coinciden.</span>
+
+                            <span class="popup-form-error text-danger"
+                                id="empty-error">Todos
+                                los campos deben estar rellenos.</span>
                         </div>
                     </div>
 
-                    <% if (locals.errors) { %>
-                        <span class="text-danger"><%= errors %></span>
-                        <% } %>
-                         
+                    <div class="send-buttons">
+                        <input id="send-but" type="submit" value="ENVIAR"
+                            class="concrete-dest-res-form-but"></input>
 
-                    <input type="submit" value="ENVIAR"
-                        class="concrete-dest-res-form-but"></input>
-                <button type="button" class="concrete-dest-res-form-but">CERRAR</button>
-                
+                    <button type="button" class="concrete-dest-res-form-but"
+                        onclick="closeAndRedirect('/')"> CERRAR</button>
+                </div>
+
             </div>
         </main>
 
         <footer>
             <%- include ('pieces/footer')%>
         </footer>
-
     </body>
-
+    <script src="/scripts/registerValidation.js"></script>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            
+      if (!validate()) {
+        event.preventDefault(); // Evita que se envíe el formulario si la validación falla
+      }
+    });
+  
+      </script>
 </html>
