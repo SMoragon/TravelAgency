@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Bootstrap, stylesheets, WP title and favicon load. -->
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/styles/style.css">
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"></script>
+    <title>Viajes La Ciénaga - Destinos - <%= datos.nombre %></title>
+    <link rel="icon" href="/Images/favicon-shrek.jpg">
+  </head>
+
+  <body>
+
+    <!-- Use of ejs to avoid copy-pasting the whole header. -->
+    <header>
+      <%- include ('pieces/header')%>
+    </header>
+
+    <main id="main">
+
+    <div class="container-fluid">
+
+      <!-- Destiny name (title of the main content in the WP) gotm by params in the render(template) call. -->
+      <p class="concrete-dest-title">
+        <%= datos.nombre.toUpperCase() %>
+      </p>
+
+      <div class="row mb-5">
+
+      <!-- Concrete destiny's carosuel of images.-->
+        <div id="destinyCarrousel" class="carousel slide ml-10 col-md-5 col-sm-12 col-12" data-bs-ride="carousel">
+
+          <div class="carousel-inner">
+
+            <div class="carousel-item active" data-bs-interval="2000">
+              <img src="<%=datos.imagen%>" class="d-block w-100" alt="<%=datos.descripcion%>" type="button"
+                data-bs-toggle="modal" data-bs-target="#dialog-1">
+
+              <div class="modal top fade" id="dialog-1" data-bs-backdrop="static">
+
+                <div class="modal-dialog modal-fullscreen">
+                  <div class="modal-content modal-destiny-container">
+
+                    <div class="modal-body container">
+                      <button type="button" class="btn-close modal-destiny-button" data-bs-dismiss="modal"></button>
+                      <img src="<%=datos.imagen%>" alt="<%=datos.descripcion%>" class="w-100 modal-destiny-image">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+                  <!-- Dynamically charge images on the carosuel.-->
+            <% if (locals.imgs) { %>
+              <% imgs.forEach(element=> { %>
+                <div class="carousel-item">
+                  <img src="<%=element.img%>" class="d-block w-100" alt="<%=element.descripcion%>" type="button"
+                    data-bs-toggle="modal" data-bs-target="#extra<%=element.id%>">
+                  <div class="modal top fade" id="extra<%=element.id%>" data-bs-backdrop="static">
+                    <div class="modal-dialog modal-fullscreen">
+                      <div class="modal-content modal-destiny-container">
+                        <div class="modal-body container">
+                          <button type="button" class="btn-close modal-destiny-button" data-bs-dismiss="modal"></button>
+                          <img src="<%=element.img%>" alt="<%=element.descripcion%>" class="w-100 modal-destiny-image">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <% }); %>
+                       <!-- Prev-next buttons the carosuel.-->
+                  <button class="carousel-control-prev" type="button" data-bs-target="#destinyCarrousels"
+                    data-bs-slide="prev">
+
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+
+                  </button>
+
+                  <button class="carousel-control-next" type="button" data-bs-target="#destinyCarrousel"
+                    data-bs-slide="next">
+
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+
+                  </button>
+                  <% } %>
+          </div>
+        </div>
+        <!-- Destiny content (a description of the offer, for instance). -->
+        <p class="concrete-dest-text col-md-5 offset-1 col-sm-10 col-10">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
+          voluptate magni dolores nulla. Reiciendis, ex tempora explicabo,
+          culpa
+          quae cumque veritatis quo est nulla assumenda vitae? Saepe molestias
+          perferendis dolores.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem
+          voluptate magni dolores nulla. Reiciendis, ex tempora explicabo,
+          culpa
+          quae cumque veritatis quo est nulla assumenda vitae? Saepe molestias
+          perferendis dolores.
+        </p>
+      </div>
+
+      <!-- Book flight button, that will toggle a modal where the form will be displayed. -->
+    </div>
+
+        <div class="row">
+          <div
+            class="concrete-dest-res-container offset-md-4 col-md-4 offset-sm-3 col-sm-6 offset-2 col-8">
+            <a data-bs-toggle="modal" data-bs-target="#concrete-dest-res-form"
+              href class="concrete-dest-res-button">
+              <div id="concrete-dest-res-text">RESERVAR VUELO</div>
+            </a>
+          </div>
+
+          <!-- Modal with the information of the booked flight. -->
+          <div class="modal modal-lg fade in" id="concrete-dest-res-form"
+            data-bs-backdrop="static">
+
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content" id="concrete-dest-res-modal-container">
+                <div class="modal-header">
+
+                  <!-- Price got by params and button to dismiss the modal as the header of it. -->
+                  <h5 class="modal-title">¡POR TAN SOLO <%= datos.precio %>€!</h5>
+                  <button type="button" class="btn-close"
+                    data-bs-dismiss="modal"></button>
+
+                </div>
+
+                <div class="modal-body">
+                  <div class="container-fluid">
+
+                    <!-- Form with the booked flight's info, which will be passed to the server after cient's validation to make
+                         some more and submit it to the database if all is correct. -->
+                    <form id="register-form" method="POST" action="/procesar_formulario">
+
+                      <div class="form-group row">
+                        <input type="hidden"
+                            name="site-name" id="site-name" value="<%= datos.nombre %>">
+                        <!-- Client's full name. -->
+                        <label for="client-full-name"
+                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
+                          Nombre y Apellidos: </label>
+
+                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
+
+                          <input type="text"
+                            class="form-control form-control-sm concrete-dest-res-form-input"
+                            name="client-full-name" id="client-full-name">
+                          
+
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                                      <!-- Client's date to the outbound flight. -->
+                        <label for="client-res-from-date"
+                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
+                          Fecha de ida: </label>
+                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
+
+                          <input type="date" onkeydown="return false"
+                            class="form-control form-control-sm concrete-dest-res-form-input"
+                            name="client-res-from-date"
+                            id="client-res-from-date">
+
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                          <!-- Client's date to the return flight. -->
+                        <label for="client-res-to-date"
+                          class="offset-md-1 col-md-4 offset-sm-2 offset-2 col-10 col-form-label concrete-dest-res-form-field">
+                          Fecha de vuelta: </label>
+                        <div class="offset-md-0 col-md-6 offset-sm-1 col-sm-7 offset-1 col-10">
+
+                          <input type="date" onkeydown="return false"
+                            class="form-control form-control-sm concrete-dest-res-form-input"
+                            name="client-res-to-date" id="client-res-to-date">
+
+                            <!-- Popup's filled with client validation's errors, that will be shown if there's anything wrong. -->
+                            <span class="popup-form-error text-danger"
+                            id="empty-error">Todos
+                            los campos deben estar rellenos.</span>
+                            
+                            <span class="popup-form-error text-danger"
+                            id="date-error">La fecha de vuelta debe ser posterior o igual a la actual y a la de ida.</span>
+
+                        </div>
+                      </div>
+                    
+                  </div>
+                </div>
+                     <!-- Submit/cancel buttons. -->
+                <div class="modal-footer">
+                  <input type="submit" value="ENVIAR"
+                    class="concrete-dest-res-form-but"></input>
+                  <button type="button"
+                    data-bs-dismiss="modal" class="concrete-dest-res-form-but">CERRAR</button>
+                </form>
+              </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  <!-- Dynamically footer's inclusion. -->
+    <footer>
+      <%- include ('pieces/footer')%>
+    </footer>
+  
+  </body>
+   <!-- Client's validation script. -->
+  <script src="/scripts/formValidation.js"></script>
+     <!-- Script to ensure that the form will not be sended to the server while there are still errors. -->
+    <script>
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            
+      if (!validate()) {
+        event.preventDefault(); // Evita que se envíe el formulario si la validación falla
+      }
+    });
+  
+      </script>
+
+</script>
+</html>

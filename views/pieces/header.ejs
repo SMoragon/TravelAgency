@@ -1,0 +1,60 @@
+<div class="top-page" id="cabecera">
+
+    <div id="header-cont" class="col-12">
+
+        <div class="col-md-5 col-sm-6 col-10" id="header-title"">
+            <!-- Company's logo. -->
+            <img class="col-md-5 col-sm-10 col-12" src="/Images/logo.png"
+                alt="Logo de Viajes la Cienaga" />
+        </div>
+
+        <div class="col-md-6 col-5">
+            <div id="login-container">
+                     <!-- JS code to show the login button only if user is logged. Otherwise, a login button will appear.. -->
+            <% if (typeof session !== 'undefined' && session.isLogged) { %>
+                <span class="login-text" id="hello-user"> ¡Bienvenido
+                    de nuevo, <%= session.user%>!</span><br>
+                <a class="login-text" href="/logout">Logout</a>
+
+                <% } else { %>
+
+                <a href="/login">Login</a>
+                <% } %>
+            </div>
+            </div>
+        </div>
+             <!-- Navigation bar. -->
+        <nav class="navbar navbar-expand-md">
+            <div class="container-fluid">
+                    <!-- Navigation bar toggler to show when screen size is too small to display all of its content (responsiveness aid). -->
+                <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse container-fluid" id="navbarNav">
+                          <!-- Navigation bar content (main pages of the app). -->
+                    <ul class="navbar-nav" id="navbar-list">
+                        <li class="nav-item">
+                            <a href="/index.html" class="nav-link"
+                                aria-current="page">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/destinos.html" class="nav-link">Destinos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/reservas.html" class="nav-link">Sus reservas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/sostenibilidad.html" class="nav-link">Sostenibilidad</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/nosotros.html" class="nav-link">Sobre nosotros</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+  
+</div>
