@@ -22,6 +22,8 @@ const middlewareSession = session({
   resave: false,
   store: sessionStore,
 });
+const moment=require("moment")
+moment.locale("es")
 
 var destPool = new pool("localhost", "admin_aw", "", "viajes");
 var destDao = new dao(destPool.get_pool());
@@ -34,6 +36,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(middlewareSession);
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.json())
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
@@ -169,6 +173,71 @@ app.post("/login", (request, response, next) => {
   });
 });
 
+app.post("/escribir_comentario", (request, response, next)=>{
+  if (!request.session.isLogged) {
+    response.status(400).end("Para escribir un comentario debes estar logueado.");
+  }
+  else{
+    console.log("Queryyy: ",request.body)
+    var nombreDest=String(request.body.nombreDest)
+    destDao.buscarDestino(nombreDest, (err,res)=>{
+      if (err) {
+        response.status(400).end();
+      }
+      else{
+        var context;
+        res.map((obj) => {
+          context = obj;
+        });
+        var datos=[
+          context,
+          request.session.user,
+          request.body.comment,
+          new Date().toDateString()
+        ]
+        console.log("Datos: ",datos)
+        destDao.insertarComentario(datos, (err,res)=>{
+          if(err){
+            console.log("Cagamos: ",err)
+            response.status(400).end();
+          }
+          else{
+            response.json({date:moment(new Date().toDateString()).fromNow()})
+          }
+        })
+      }
+    });
+  }
+})
+
+app.get("/leer_comentarios", (request, response, next)=>{
+  if (request.session.isLogged !== true) {
+    response.status(403).render("accionSinLogin.ejs");
+  }
+  else{
+    var idDestino=Number(request.params.idDestino)
+    destDao.buscarDestino(idDestino, (err,res)=>{
+      if (err) {
+        response.status(400).end();
+      }
+      else{
+        destDao.verComentariosDestino(res, (err,res)=>{
+          if(err){
+            response.status(400).end();
+          }
+          else{
+            var context;
+            res.map((obj) => {
+              context = obj;
+            });
+            response.json({result:context})
+          }
+        })
+      }
+    });
+  }
+})
+
 app.post("/procesar_formulario", async (request, response) => {
   reservar(request, response);
 });
@@ -189,12 +258,12 @@ app.listen(port, (err) => {
 
 /* Función para realizar una reserva. Si el usuario no está logueado, se le
 indica que debe hacerlo para poder reservar a través de la página
-"reservaSinLogin.ejs". Si no, en caso de haber un error en la base de datos, lo lanza
+"accionSinLogin.ejs". Si no, en caso de haber un error en la base de datos, lo lanza
 y redirige al usuario a esa página. En otro caso, la reserva se completa y se le 
 notifica al usuario.*/
 function reservar(request, response) {
   if (request.session.isLogged !== true) {
-    response.status(403).render("reservaSinLogin.ejs");
+    response.status(403).render("accionSinLogin.ejs");
   } else {
     destDao.leerDestinoNombre(request.body["site-name"], (err, res) => {
       if (err) {

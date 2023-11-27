@@ -16,6 +16,8 @@
       integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
       crossorigin="anonymous"></script>
     <title>Viajes La Ciénaga - Destinos - <%= datos.nombre %></title>
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="icon" href="/Images/favicon-shrek.jpg">
   </head>
 
@@ -31,7 +33,7 @@
     <div class="container-fluid">
 
       <!-- Destiny name (title of the main content in the WP) gotm by params in the render(template) call. -->
-      <p class="concrete-dest-title">
+      <p id="dest_name" class="concrete-dest-title">
         <%= datos.nombre.toUpperCase() %>
       </p>
 
@@ -217,6 +219,23 @@
 
         </div>
 
+        <div id="user-comment" class="col-md-4 col-sm-6 col-10">
+          
+          <div class="container d-flex flex-column mx-2">
+            <div class="my-2">
+              <textarea placeholder="Añade un comentario..." class="form-control rounded" type="text" name="comment_text", id="comment_text" rows="5" ></textarea>  
+            </div>
+            <div class="d-flex justify-content-center">
+              <button id="cancel_comment" type="button" class="">Cancelar</button>
+              <button id="send_comment" type="button" class="mx-4">Enviar</button>
+            </div>
+            <hr class="my-2 solid">
+          </div> 
+          
+          <div id="comments_section" class="container d-flex flex-column mx-2">
+            </div>
+        </div>
+        
       </div>
 
     </main>
@@ -226,6 +245,7 @@
     </footer>
   
   </body>
+  <script src="/scripts/comments.js"></script>
    <!-- Client's validation script. -->
   <script src="/scripts/formValidation.js"></script>
      <!-- Script to ensure that the form will not be sended to the server while there are still errors. -->
