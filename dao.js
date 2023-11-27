@@ -161,7 +161,19 @@ class DAO {
       if (err) {
         callback(err);
       } else {
-        const sql = "Select * from comentarios where destino_id=?";
+        const sql = "Select * from comentarios where destino_id=? Order by fecha_comentario desc";
+        connection.query(sql, destino, callback);
+        connection.release();
+      }
+    });
+  }
+
+  verItinerarioDestino(destino, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        const sql = "Select actividad from itinerarios where id_destino=?";
         connection.query(sql, destino, callback);
         connection.release();
       }

@@ -161,7 +161,6 @@ a {
 }
 
 .concrete-dest-res-container {
-  display: block;
   margin-bottom: 3em;
   border: solid 5px;
   color: rgb(223, 134, 90);
@@ -175,12 +174,12 @@ a {
   background-color: rgb(245, 232, 199);
 }
 
-#concrete-dest-res-text {
+.concrete-dest-res-text {
   text-align: center;
   word-wrap: break-word;
 }
 
-#concrete-dest-res-modal-container {
+#concrete-dest-res-modal-container, #itinerary-modal-container {
   background-color: rgb(224, 215, 192);
 }
 
@@ -201,6 +200,16 @@ a {
   font-weight: bold;
 }
 
+.comment-but {
+  color: rgb(232, 184, 122);
+  background-color: rgba(97, 80, 35, 0.679);
+  font-weight: bold;
+}
+
+#comment_text {
+  background-color: rgb(236, 213, 161);
+  resize: none;
+}
 /*Login styles, such as buttons, text...*/
 
 #you-must-log-in {
@@ -278,6 +287,27 @@ a {
   text-align: center;
 }
 
+.comment-user {
+  font-weight: bold;
+  font-size: 0.6em+0.8vw;
+}
+
+.comment-date {
+  font-weight: lighter;
+}
+
+.comment-container {
+  padding: 1em;
+  border: solid 0.15em;
+  border-color: rgb(195, 159, 91);
+}
+
+#dest-buts-containers {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: center;
+}
+
 /*Concrete styles, especially when resizing, to aid with the responsiveness.*/
 
 @media (min-width: 768px) {
@@ -320,5 +350,11 @@ a {
 
   .concrete-dest-res-button {
     font-size: calc(1em + 2vw);
+  }
+}
+
+@media (max-width: 320px) {
+  #dest-buts-container {
+    flex-direction: column !important;
   }
 }

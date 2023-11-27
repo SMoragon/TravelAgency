@@ -22,7 +22,8 @@ const middlewareSession = session({
   resave: false,
   store: sessionStore,
 });
-const moment=require("moment")
+const moment = require("moment");
+const { stringify } = require("querystring");
 moment.locale("es")
 
 var destPool = new pool("localhost", "admin_aw", "", "viajes");
@@ -131,7 +132,7 @@ app.post("/register", (request, response, next) => {
 });
 
 app.get("/logout", (request, response, next) => {
- 
+
   const redirectTo = request.get('Referer') || '/'; // Obtener la URL anterior o redirigir a la raíz '/'
   request.session.isLogged = false;
   request.session.user = undefined;
@@ -173,36 +174,36 @@ app.post("/login", (request, response, next) => {
   });
 });
 
-app.post("/escribir_comentario", (request, response, next)=>{
+app.post("/escribir_comentario", (request, response, next) => {
   if (!request.session.isLogged) {
-    response.status(400).end("Para escribir un comentario debes estar logueado.");
+    response.status(400).end("No logged");
   }
-  else{
-    console.log("Queryyy: ",request.body)
-    var nombreDest=String(request.body.nombreDest)
-    destDao.buscarDestino(nombreDest, (err,res)=>{
+  else {
+    var nombreDest = String(request.body.nombreDest)
+    destDao.buscarDestino(nombreDest, (err, res) => {
       if (err) {
         response.status(400).end();
       }
-      else{
+      else {
         var context;
         res.map((obj) => {
           context = obj;
         });
-        var datos=[
-          context,
+        var datos = [
+          context.id,
           request.session.user,
           request.body.comment,
-          new Date().toDateString()
+          new Date()
         ]
-        console.log("Datos: ",datos)
-        destDao.insertarComentario(datos, (err,res)=>{
-          if(err){
-            console.log("Cagamos: ",err)
+        destDao.insertarComentario(datos, (err, res) => {
+          if (err) {
             response.status(400).end();
           }
-          else{
-            response.json({date:moment(new Date().toDateString()).fromNow()})
+          else {
+            response.json({
+               date: moment(new Date()).fromNow(),
+               user: request.session.user,
+              })
           }
         })
       }
@@ -210,27 +211,32 @@ app.post("/escribir_comentario", (request, response, next)=>{
   }
 })
 
-app.get("/leer_comentarios", (request, response, next)=>{
-  if (request.session.isLogged !== true) {
-    response.status(403).render("accionSinLogin.ejs");
+app.get("/ver_itinerario/:nombreDest",(request,response,next)=>{
+  if (!request.session.isLogged) {
+    response.status(400).end("No logged");
   }
-  else{
-    var idDestino=Number(request.params.idDestino)
-    destDao.buscarDestino(idDestino, (err,res)=>{
+  else {
+    var nombreDest = String(request.params.nombreDest)
+    destDao.buscarDestino(nombreDest, (err, res) => {
       if (err) {
         response.status(400).end();
       }
-      else{
-        destDao.verComentariosDestino(res, (err,res)=>{
+      else {
+        var context;
+        res.map((obj) => {
+          context = obj;
+        });
+        var idDestino=context.id;
+        destDao.verItinerarioDestino(idDestino,(err,res)=>{
           if(err){
             response.status(400).end();
           }
           else{
-            var context;
-            res.map((obj) => {
-              context = obj;
-            });
-            response.json({result:context})
+            var activities=res;
+            console.log(res)
+            response.json({
+              activities: activities
+             })
           }
         })
       }
@@ -242,6 +248,9 @@ app.post("/procesar_formulario", async (request, response) => {
   reservar(request, response);
 });
 
+app.get("/you_must_login",(request,response,next)=>{
+  response.status(200).render("accionSinLogin.ejs")
+})
 // Middleware para manejar rutas que no pertenezcan a la aplicación.
 app.use((request, response) => {
   response.status(404).send("<h1> Error 404: Route is not defined</h1>");
@@ -302,27 +311,46 @@ function sendToDestiny(response, name, next) {
         res.map((obj) => {
           context = obj;
         });
-        destDao.leerImagen(context.id, (err, res) => {
+      
+        destDao.verComentariosDestino(context.id, (err, res) => {
           if (err) {
-            next();
-          } else {
-            if (res.length != 0) {
-              res.forEach((element) => {
-                element.img = path.normalize(element.img);
-              });
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                imgs: res,
-                showModal: false,
-              });
-            } else {
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                showModal: false,
-              });
-            }
+            response.status(400).end();
           }
-        });
+          else {
+            var comments;
+            
+            res.forEach((comment)=>{
+                comment.fecha_comentario=moment(comment.fecha_comentario).fromNow();
+              })
+
+            comments=res;
+         
+            destDao.leerImagen(context.id, (err, res) => {
+              if (err) {
+                next();
+              } else {
+                if (res.length != 0) {
+                  res.forEach((element) => {
+                    element.img = path.normalize(element.img);
+                  });
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    imgs: res,
+                    showModal: false,
+                    comments:comments
+                  });
+                } else {
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    showModal: false,
+                    comments:comments
+                  });
+                }
+              }
+            });
+          }
+        })
+ 
       } else {
         next();
       }
@@ -343,27 +371,46 @@ function sendToDestinyId(request, response, next) {
         res.map((obj) => {
           context = obj;
         });
-        destDao.leerImagen(context.id, (err, res) => {
+      
+        destDao.verComentariosDestino(context.id, (err, res) => {
           if (err) {
-            next();
-          } else {
-            if (res.length != 0) {
-              res.forEach((element) => {
-                element.img = path.normalize(element.img);
-              });
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                imgs: res,
-                showModal: false,
-              });
-            } else {
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                showModal: false,
-              });
-            }
+            response.status(400).end();
           }
-        });
+          else {
+            var comments;
+            
+            res.forEach((comment)=>{
+                comment.fecha_comentario=moment(comment.fecha_comentario).fromNow();
+              })
+
+            comments=res;
+         
+            destDao.leerImagen(context.id, (err, res) => {
+              if (err) {
+                next();
+              } else {
+                if (res.length != 0) {
+                  res.forEach((element) => {
+                    element.img = path.normalize(element.img);
+                  });
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    imgs: res,
+                    showModal: false,
+                    comments:comments
+                  });
+                } else {
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    showModal: false,
+                    comments:comments
+                  });
+                }
+              }
+            });
+          }
+        })
+ 
       } else {
         next();
       }
