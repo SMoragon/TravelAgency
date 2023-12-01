@@ -16,6 +16,8 @@
       integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
       crossorigin="anonymous"></script>
     <title>Viajes La Ciénaga - Destinos - <%= datos.nombre %></title>
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="icon" href="/Images/favicon-shrek.jpg">
   </head>
 
@@ -31,7 +33,7 @@
     <div class="container-fluid">
 
       <!-- Destiny name (title of the main content in the WP) gotm by params in the render(template) call. -->
-      <p class="concrete-dest-title">
+      <p id="dest_name" class="concrete-dest-title">
         <%= datos.nombre.toUpperCase() %>
       </p>
 
@@ -117,14 +119,29 @@
     </div>
 
         <div class="row">
-          <div
-            class="concrete-dest-res-container offset-md-4 col-md-4 offset-sm-3 col-sm-6 offset-2 col-8">
-            <a data-bs-toggle="modal" data-bs-target="#concrete-dest-res-form"
+          <div id="dest-buts-container" class="d-flex justify-content-center">
+            <div
+              class="mx-md-5 mx-2 row concrete-dest-res-container">
+            
+              <a data-bs-toggle="modal" data-bs-target="#itinerary-modal"
               href class="concrete-dest-res-button">
-              <div id="concrete-dest-res-text">RESERVAR VUELO</div>
-            </a>
-          </div>
+              <div id="itinerary_but" class="concrete-dest-res-text">VER ITINERARIO</div>
 
+              </a>
+           
+            </div>
+            <div
+              class="mx-md-5 mx-2 row concrete-dest-res-container">
+            
+              <a data-bs-toggle="modal" data-bs-target="#concrete-dest-res-form"
+              href class="concrete-dest-res-button">
+              <div class="concrete-dest-res-text">RESERVAR VUELO</div>
+
+              </a>
+           
+            </div>
+          </div>
+         
           <!-- Modal with the information of the booked flight. -->
           <div class="modal modal-lg fade in" id="concrete-dest-res-form"
             data-bs-backdrop="static">
@@ -215,8 +232,81 @@
             </div>
           </div>
 
+          <div class="modal modal-lg fade in" id="itinerary-modal"
+            data-bs-backdrop="static">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content" id="itinerary-modal-container">
+                <div class="modal-header">
+
+                  <!-- Price got by params and button to dismiss the modal as the header of it. -->
+                  <h5 class="modal-title">Listado de actividades del viaje a <%= datos.nombre %></h5>
+                  <button type="button" class="btn-close"
+                    data-bs-dismiss="modal"></button>
+
+                </div>
+
+                <div class="modal-body">
+                    <ul id="activity_list">
+               
+                    </ul>
+                </div>
+                     <!-- Submit/cancel buttons. -->
+                <div class="modal-footer">
+                 
+                  <button type="button"
+                    data-bs-dismiss="modal" class="itinerary-modal">CERRAR</button>
+                      </div>
+                </div>
+            </div>
         </div>
 
+        </div>
+
+        <div class="d-flex">
+          <div id="user-comment" class="col-md-4 col-sm-6 col-10">
+          
+            <div class="container d-flex flex-column mx-2">
+              <div class="my-2">
+                <textarea placeholder="Añade un comentario..." class="form-control rounded" type="text" name="comment_text" id="comment_text" rows="5" ></textarea>  
+              </div>
+              <div class="d-flex justify-content-center">
+                <button id="cancel_comment" class="comment-but" type="button">Cancelar</button>
+                <button id="send_comment" type="button" class="mx-sm-4 mx-3 comment-but">Enviar</button>
+              </div>
+              <hr class="my-2 solid">
+            </div> 
+            
+            <div id="comments_section" class="container d-flex flex-column mx-2">
+              <% if (locals.comments) { %>
+                <% comments.forEach(comment=> { %>
+                  <div class="my-2 mx-md-4 mx-1 container rounded comment-container">
+                    
+                    <div id="comment-header" class="d-flex flex-wrap flex-row">
+                      <div class="row mx-md-3 mx-1 comment-user">
+                        <%=comment.nombre_usuario%>
+                      </div>
+  
+                      <div class="row mx-md-3 mx-1 comment-date">
+                        (<%=comment.fecha_comentario%>)
+                      </div>
+  
+                    </div>
+  
+                    <div id="message-body" class="my-3 mx-3">
+                      <%=comment.comentario%>
+                    </div>
+  
+                  </div>
+  
+              <%});} %>  
+                 
+            </div>
+          </div>
+        </div>
+       
+        
       </div>
 
     </main>
@@ -226,6 +316,7 @@
     </footer>
   
   </body>
+  <script src="/scripts/comments.js"></script>
    <!-- Client's validation script. -->
   <script src="/scripts/formValidation.js"></script>
      <!-- Script to ensure that the form will not be sended to the server while there are still errors. -->

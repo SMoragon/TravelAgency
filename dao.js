@@ -40,7 +40,6 @@ class DAO {
       if (err) {
         callback(err);
       } else {
-
         const sql =
           "Insert Into imagen (destino_id, img, descripcion) VALUES (?,?,?) ";
         connection.query(sql, datos, callback);
@@ -53,9 +52,7 @@ class DAO {
       if (err) {
         callback(err);
       } else {
-
-        const sql =
-          "Select * From imagen Where destino_id = ?";
+        const sql = "Select * From imagen Where destino_id = ?";
         connection.query(sql, id, callback);
         connection.release();
       }
@@ -104,33 +101,80 @@ class DAO {
     });
   }
 
-    /* Función que, dado un correo y una contraseña válidos, inserta un usuario en
+  /* Función que, dado un correo y una contraseña válidos, inserta un usuario en
     la base de datos, para que pase a estar registrado. */
-  registrarUsuario(datos,callback){
+  registrarUsuario(datos, callback) {
     this.pool.getConnection((err, connection) => {
       if (err) {
         callback(err);
       } else {
-        const sql =
-          "Insert Into usuarios (correo, contraseña) VALUES (?,?)";
+        const sql = "Insert Into usuarios (correo, contraseña) VALUES (?,?)";
         connection.query(sql, datos, callback);
         connection.release();
       }
     });
   }
 
-    /* Función que, dado un correo válido, comprueba si ya existe un usuario con
+  /* Función que, dado un correo válido, comprueba si ya existe un usuario con
     ese correo o no (ideal para validar en el register que un usuario tiene ya
     ese correo vinculado a su cuenta, para evitar múltiples cuentas con un mismo
     correo) */
-  buscarUsuario(correo,callback){
+  buscarUsuario(correo, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        const sql = "Select * From usuarios Where correo=?";
+        connection.query(sql, correo, callback);
+        connection.release();
+      }
+    });
+  }
+
+  buscarDestino(destino, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        const sql = "Select id From destinos Where nombre=?";
+        connection.query(sql, destino, callback);
+        connection.release();
+      }
+    });
+  }
+
+  insertarComentario(datos, callback) {
     this.pool.getConnection((err, connection) => {
       if (err) {
         callback(err);
       } else {
         const sql =
-          "Select * From usuarios Where correo=?";
-        connection.query(sql, correo, callback);
+          "Insert into comentarios (destino_id, nombre_usuario, comentario, fecha_comentario) Values(?,?,?,?)";
+        connection.query(sql, datos, callback);
+        connection.release();
+      }
+    });
+  }
+
+  verComentariosDestino(destino, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        const sql = "Select * from comentarios where destino_id=? Order by fecha_comentario desc";
+        connection.query(sql, destino, callback);
+        connection.release();
+      }
+    });
+  }
+
+  verItinerarioDestino(destino, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        const sql = "Select actividad from itinerarios where id_destino=?";
+        connection.query(sql, destino, callback);
         connection.release();
       }
     });

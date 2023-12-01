@@ -22,6 +22,9 @@ const middlewareSession = session({
   resave: false,
   store: sessionStore,
 });
+const moment = require("moment");
+const { stringify } = require("querystring");
+moment.locale("es")
 
 var destPool = new pool("localhost", "admin_aw", "", "viajes");
 var destDao = new dao(destPool.get_pool());
@@ -34,6 +37,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(middlewareSession);
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.json())
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
@@ -127,7 +132,7 @@ app.post("/register", (request, response, next) => {
 });
 
 app.get("/logout", (request, response, next) => {
- 
+
   const redirectTo = request.get('Referer') || '/'; // Obtener la URL anterior o redirigir a la raíz '/'
   request.session.isLogged = false;
   request.session.user = undefined;
@@ -169,10 +174,83 @@ app.post("/login", (request, response, next) => {
   });
 });
 
+app.post("/escribir_comentario", (request, response, next) => {
+  if (!request.session.isLogged) {
+    response.status(400).end("No logged");
+  }
+  else {
+    var nombreDest = String(request.body.nombreDest)
+    destDao.buscarDestino(nombreDest, (err, res) => {
+      if (err) {
+        response.status(400).end();
+      }
+      else {
+        var context;
+        res.map((obj) => {
+          context = obj;
+        });
+        var datos = [
+          context.id,
+          request.session.user,
+          request.body.comment,
+          new Date()
+        ]
+        destDao.insertarComentario(datos, (err, res) => {
+          if (err) {
+            response.status(400).end();
+          }
+          else {
+            response.json({
+               date: moment(new Date()).fromNow(),
+               user: request.session.user,
+              })
+          }
+        })
+      }
+    });
+  }
+})
+
+app.get("/ver_itinerario/:nombreDest",(request,response,next)=>{
+  if (!request.session.isLogged) {
+    response.status(400).end("No logged");
+  }
+  else {
+    var nombreDest = String(request.params.nombreDest)
+    destDao.buscarDestino(nombreDest, (err, res) => {
+      if (err) {
+        response.status(400).end();
+      }
+      else {
+        var context;
+        res.map((obj) => {
+          context = obj;
+        });
+        var idDestino=context.id;
+        destDao.verItinerarioDestino(idDestino,(err,res)=>{
+          if(err){
+            response.status(400).end();
+          }
+          else{
+            var activities=res;
+            console.log(res)
+            response.json({
+              activities: activities
+             })
+          }
+        })
+      }
+    });
+  }
+})
+
 app.post("/procesar_formulario", async (request, response) => {
   reservar(request, response);
 });
 
+app.get("/you_must_login",(request,response,next)=>{
+  response.status(200).render("accionSinLogin.ejs")
+})
 // Middleware para manejar rutas que no pertenezcan a la aplicación.
 app.use((request, response) => {
   response.status(404).send("<h1> Error 404: Route is not defined</h1>");
@@ -189,12 +267,12 @@ app.listen(port, (err) => {
 
 /* Función para realizar una reserva. Si el usuario no está logueado, se le
 indica que debe hacerlo para poder reservar a través de la página
-"reservaSinLogin.ejs". Si no, en caso de haber un error en la base de datos, lo lanza
+"accionSinLogin.ejs". Si no, en caso de haber un error en la base de datos, lo lanza
 y redirige al usuario a esa página. En otro caso, la reserva se completa y se le 
 notifica al usuario.*/
 function reservar(request, response) {
   if (request.session.isLogged !== true) {
-    response.status(403).render("reservaSinLogin.ejs");
+    response.status(403).render("accionSinLogin.ejs");
   } else {
     destDao.leerDestinoNombre(request.body["site-name"], (err, res) => {
       if (err) {
@@ -233,27 +311,46 @@ function sendToDestiny(response, name, next) {
         res.map((obj) => {
           context = obj;
         });
-        destDao.leerImagen(context.id, (err, res) => {
+      
+        destDao.verComentariosDestino(context.id, (err, res) => {
           if (err) {
-            next();
-          } else {
-            if (res.length != 0) {
-              res.forEach((element) => {
-                element.img = path.normalize(element.img);
-              });
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                imgs: res,
-                showModal: false,
-              });
-            } else {
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                showModal: false,
-              });
-            }
+            response.status(400).end();
           }
-        });
+          else {
+            var comments;
+            
+            res.forEach((comment)=>{
+                comment.fecha_comentario=moment(comment.fecha_comentario).fromNow();
+              })
+
+            comments=res;
+         
+            destDao.leerImagen(context.id, (err, res) => {
+              if (err) {
+                next();
+              } else {
+                if (res.length != 0) {
+                  res.forEach((element) => {
+                    element.img = path.normalize(element.img);
+                  });
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    imgs: res,
+                    showModal: false,
+                    comments:comments
+                  });
+                } else {
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    showModal: false,
+                    comments:comments
+                  });
+                }
+              }
+            });
+          }
+        })
+ 
       } else {
         next();
       }
@@ -274,27 +371,46 @@ function sendToDestinyId(request, response, next) {
         res.map((obj) => {
           context = obj;
         });
-        destDao.leerImagen(context.id, (err, res) => {
+      
+        destDao.verComentariosDestino(context.id, (err, res) => {
           if (err) {
-            next();
-          } else {
-            if (res.length != 0) {
-              res.forEach((element) => {
-                element.img = path.normalize(element.img);
-              });
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                imgs: res,
-                showModal: false,
-              });
-            } else {
-              response.status(200).render("generalDestiny.ejs", {
-                datos: context,
-                showModal: false,
-              });
-            }
+            response.status(400).end();
           }
-        });
+          else {
+            var comments;
+            
+            res.forEach((comment)=>{
+                comment.fecha_comentario=moment(comment.fecha_comentario).fromNow();
+              })
+
+            comments=res;
+         
+            destDao.leerImagen(context.id, (err, res) => {
+              if (err) {
+                next();
+              } else {
+                if (res.length != 0) {
+                  res.forEach((element) => {
+                    element.img = path.normalize(element.img);
+                  });
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    imgs: res,
+                    showModal: false,
+                    comments:comments
+                  });
+                } else {
+                  response.status(200).render("generalDestiny.ejs", {
+                    datos: context,
+                    showModal: false,
+                    comments:comments
+                  });
+                }
+              }
+            });
+          }
+        })
+ 
       } else {
         next();
       }
