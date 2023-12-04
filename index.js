@@ -53,8 +53,21 @@ app.get("/index.html", (request, response) => {
   response.status(200).render("index.ejs");
 });
 
-app.get("/destinos.html", (request, response) => {
-  response.status(200).render("destinos.ejs");
+// Enrutamiento a la pagina de busqueda de destino, donde se muestran una lista de destinos buscado,
+// por defecto son todos los destinos
+app.get("/destinos.html", (request, response,next) => {
+  var busqueda = "";
+  if (request.query['search'] !== undefined) {
+    busqueda = request.query['search'];
+  }
+  destDao.buscarDestinoStr(busqueda, (err, res) => {
+    if (err) {
+      next();
+    }
+    else {
+      response.status(200).render("destinos.ejs", { dato: res });
+    }
+  })
 });
 
 app.get("/nosotros.html", (request, response) => {
@@ -233,7 +246,6 @@ app.get("/ver_itinerario/:nombreDest",(request,response,next)=>{
           }
           else{
             var activities=res;
-            console.log(res)
             response.json({
               activities: activities
              })

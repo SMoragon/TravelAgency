@@ -85,6 +85,24 @@ class DAO {
       }
     });
   }
+  /* Buscar Destino a partir de una cadena de texto */
+  buscarDestinoStr(str, callback) {
+    this.pool.getConnection((err, connection) => {
+      if (err) {
+        callback(err);
+      } else {
+        var sql;
+        if (str === "") {
+          sql = "Select * From destinos"
+        } else {
+          sql = "Select * From destinos Where nombre like ? or id like ?"
+        }
+        str = "%" + str + "%"
+        connection.query(sql, [str,str], callback);
+        connection.release();
+      }
+    });
+  }
 
   /* Función que, dado un id válido de destino, un nombre, un correo, una fecha de reserva de ida y una de vuelta, genera
    una nueva reserva en la tabla correspondiente. */
