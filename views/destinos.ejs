@@ -1,41 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- BootStrap import. -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous" />
-    <!-- App's stylesheet import. -->
-    <link rel="stylesheet" type="text/css" href="styles/style.css" />
-    <!-- BootStrap import. -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-      crossorigin="anonymous"></script>
-    <!-- App's title to show in browser. -->
-    <title>Viajes La Ciénaga - Destinos</title>
-    <!-- App's favicon to show in browser. -->
-    <link rel="icon" type="image/jpg" href="Images/favicon-shrek.jpg" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- BootStrap import. -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <!-- App's stylesheet import. -->
+  <link rel="stylesheet" type="text/css" href="styles/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- BootStrap import. -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+    crossorigin="anonymous"></script>
+  <!-- App's title to show in browser. -->
+  <title>Viajes La Ciénaga - Destinos</title>
+  <!-- App's favicon to show in browser. -->
+  <link rel="icon" type="image/jpg" href="Images/favicon-shrek.jpg" />
+</head>
 
-  <body>
-       <!-- Dynamically insert header template. -->
-    <header>
-      <%- include ('pieces/header')%>
-    </header>
-       <!-- Dynamically insert body (cards) template. -->
-    <main id="main">
-      <%- include ('pieces/cardsBody')%>
-    </main>
-       <!-- Dynamically insert footer template. -->
-    <footer>
-      <%- include ('pieces/footer')%>
-    </footer>
-  </body>
+<body>
+  <!-- Dynamically insert header template. -->
+  <header>
+    <%- include ('pieces/header')%>
+  </header>
+  <!-- Dynamically insert body (cards) template. -->
+  <main id="main">
+    <div class="row justify-content-center my-5">
+      <div class="col-auto">
+        <form class="p-0 d-inline-block" method="get" action="/destinos.html">
+          <input class="search_text rounded-3 pb-2 px-3" type="text" placeholder="Search.." name="search">
+          <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+        </form>
+      </div>
+    </div>
+    <section id="destinies-cards" class="container">
+      <div class="row">
+        <% if (locals.dato) { %>
+          <% locals.dato.forEach(element=> { %>
+              <div class="col-md-4 col-sm-6 col-12">
+                <!-- Link to the concrete destiny. -->
+                <a href="<%=element.url%>">
+                  <div class="card col-11 destiny-card">
+
+                    <div class="card-body">
+                      <!-- Title of the concrete destiny. -->
+                      <h4 class="card-title">
+                        <%=element.nombre%>
+                      </h4>
+                      <!-- Representative image of the concrete destiny. -->
+                      <img class="destiny-img col-12" src="<%=element.imagen%>" alt="<%=element.descripcion%>" />
+                      <!-- Brief description of the concrete destiny. -->
+                      <p class="card-text">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                        Quod nulla amet, deleniti debitis id sint nostrum ratione
+                        voluptatibus illum excepturi libero omnis fugit
+                        necessitatibus inventore expedita quasi non. Id, quod?
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <%});%>
+                <%}%>
+      </div>
+    </section>
+  </main>
+  <!-- Dynamically insert footer template. -->
+  <footer>
+    <%- include ('pieces/footer')%>
+  </footer>
+</body>
 
 </html>
